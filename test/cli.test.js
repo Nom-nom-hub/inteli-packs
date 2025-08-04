@@ -291,7 +291,7 @@ const testErrorHandling = async () => {
 /**
  * Test circular imports detection
  */
-async const testCircularImports = () {
+const testCircularImports = async () => {
   console.log('🧪 Testing circular imports detection...');
   
   const projectDir = await createTestProject('circular-test');
@@ -324,7 +324,7 @@ module.exports = { b: 'B' };
 /**
  * Test dead file detection
  */
-async const testDeadFileDetection = () {
+const testDeadFileDetection = async () => {
   console.log('🧪 Testing dead file detection...');
   
   const projectDir = await createTestProject('dead-files-test');
@@ -352,7 +352,7 @@ module.exports = { unused };
 /**
  * Test plugin system
  */
-async const testPluginSystem = () {
+const testPluginSystem = async () => {
   console.log('🧪 Testing plugin system...');
   
   const projectDir = await createTestProject('plugin-test');
