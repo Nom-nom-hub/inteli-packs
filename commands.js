@@ -871,16 +871,16 @@ jspm_packages/
       console.log(chalk.blue.bold('\n🤖 Available AI Models:'));
       console.log(chalk.gray('='.repeat(50)));
 
-      const { aiProvider: status } = this.getProviderStatus();
-      const { aiProvider: available } = this.getAvailableProviders();
+      const status = this.aiProvider.getProviderStatus();
+      const available = this.aiProvider.getAvailableProviders();
 
       for (const [name, info] of Object.entries(status)) {
-        const { available: statusIcon } = info ? '✅' : '❌';
-        const { available: statusText } = info ? 'Available' : 'Unavailable';
-        const { lastUsed: lastUsed } = info
+        const statusIcon = info.available ? '✅' : '❌';
+        const statusText = info.available ? 'Available' : 'Unavailable';
+        const lastUsed = info.lastUsed
           ? ` (Last used: ${new Date(info.lastUsed).toLocaleString()})`
           : '';
-        const { errorCount: errorCount } = info > 0 ? ` (${info.errorCount} errors)` : '';
+        const errorCount = info.errorCount > 0 ? ` (${info.errorCount} errors)` : '';
 
         console.log(`${statusIcon} ${chalk.bold(name)}: ${statusText}${lastUsed}${errorCount}`);
       }
@@ -889,9 +889,16 @@ jspm_packages/
       console.log(chalk.gray('- GEMINI_API_KEY: Gemini API key'));
       console.log(chalk.gray('- OPENAI_API_KEY: OpenAI API key'));
       console.log(chalk.gray('- ANTHROPIC_API_KEY: Anthropic API key'));
-      console.log(
-        chalk.gray('- OLLAMA_BASE_URL: Ollama server URL (default: http://localhost:11434)'),
-      );
+      console.log(chalk.gray('- OPENROUTER_API_KEY: OpenRouter API key'));
+      console.log(chalk.gray('- AZURE_OPENAI_API_KEY: Azure OpenAI API key'));
+      console.log(chalk.gray('- AZURE_OPENAI_ENDPOINT: Azure OpenAI endpoint'));
+      console.log(chalk.gray('- AZURE_OPENAI_DEPLOYMENT_NAME: Azure OpenAI deployment'));
+      console.log(chalk.gray('- COHERE_API_KEY: Cohere API key'));
+      console.log(chalk.gray('- HUGGINGFACE_API_KEY: Hugging Face API key'));
+      console.log(chalk.gray('- REPLICATE_API_KEY: Replicate API key'));
+      console.log(chalk.gray('- TOGETHER_API_KEY: Together AI API key'));
+      console.log(chalk.gray('- PERPLEXITY_API_KEY: Perplexity API key'));
+      console.log(chalk.gray('- OLLAMA_BASE_URL: Ollama server URL (default: http://localhost:11434)'));
       console.log(chalk.gray('- OLLAMA_MODEL: Ollama model name (default: llama2)'));
       console.log(chalk.gray('- LLAMA_MODEL_PATH: Path to local LLaMA model'));
     } catch (error) {
@@ -907,7 +914,7 @@ jspm_packages/
       console.log(chalk.blue.bold('\n🧪 Testing AI Models:'));
       console.log(chalk.gray('='.repeat(50)));
 
-      const { aiProvider: providers } = this.getAvailableProviders();
+      const providers = this.aiProvider.getAvailableProviders();
 
       for (const provider of providers) {
         console.log(chalk.yellow(`\nTesting ${provider}...`));

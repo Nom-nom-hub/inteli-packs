@@ -18,7 +18,7 @@ The AI analysis system is the core of Inteli-Packs, providing intelligent insigh
 - **Advantages**: Fast, cost-effective, good reasoning
 - **Best For**: General analysis, dependency insights
 
-### 🧠 GPT-4
+### 🧠 OpenAI GPT-4
 - **Provider**: OpenAI
 - **API Key**: `OPENAI_API_KEY`
 - **Advantages**: High quality, reliable, comprehensive
@@ -29,6 +29,50 @@ The AI analysis system is the core of Inteli-Packs, providing intelligent insigh
 - **API Key**: `ANTHROPIC_API_KEY`
 - **Advantages**: Excellent reasoning, safety-focused
 - **Best For**: Security analysis, code review
+
+### 🌐 OpenRouter
+- **Provider**: OpenRouter
+- **API Key**: `OPENROUTER_API_KEY`
+- **Advantages**: Access to multiple models, cost-effective
+- **Best For**: Model comparison, cost optimization
+
+### ☁️ Azure OpenAI
+- **Provider**: Microsoft Azure
+- **API Key**: `AZURE_OPENAI_API_KEY`
+- **Endpoint**: `AZURE_OPENAI_ENDPOINT`
+- **Deployment**: `AZURE_OPENAI_DEPLOYMENT_NAME`
+- **Advantages**: Enterprise integration, compliance
+- **Best For**: Enterprise environments, compliance requirements
+
+### 🎨 Cohere
+- **Provider**: Cohere
+- **API Key**: `COHERE_API_KEY`
+- **Advantages**: Good for text generation, summarization
+- **Best For**: Documentation generation, text analysis
+
+### 🤗 Hugging Face
+- **Provider**: Hugging Face
+- **API Key**: `HUGGINGFACE_API_KEY`
+- **Advantages**: Access to thousands of models
+- **Best For**: Specialized models, research applications
+
+### 🔄 Replicate
+- **Provider**: Replicate
+- **API Key**: `REPLICATE_API_KEY`
+- **Advantages**: Easy model deployment, async processing
+- **Best For**: Custom model deployment, batch processing
+
+### 🌟 Together AI
+- **Provider**: Together AI
+- **API Key**: `TOGETHER_API_KEY`
+- **Advantages**: Open source models, cost-effective
+- **Best For**: Open source models, cost optimization
+
+### 🔍 Perplexity
+- **Provider**: Perplexity
+- **API Key**: `PERPLEXITY_API_KEY`
+- **Advantages**: Fast inference, good for real-time
+- **Best For**: Real-time analysis, quick responses
 
 ### 🏠 Ollama (Local)
 - **Provider**: Local Ollama server
@@ -56,6 +100,35 @@ OPENAI_API_KEY=your_openai_api_key
 # Anthropic Claude
 ANTHROPIC_API_KEY=your_anthropic_api_key
 
+# OpenRouter
+OPENROUTER_API_KEY=your_openrouter_api_key
+OPENROUTER_MODEL=openai/gpt-4
+
+# Azure OpenAI
+AZURE_OPENAI_API_KEY=your_azure_openai_api_key
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
+AZURE_OPENAI_DEPLOYMENT_NAME=your-deployment-name
+
+# Cohere
+COHERE_API_KEY=your_cohere_api_key
+COHERE_MODEL=command
+
+# Hugging Face
+HUGGINGFACE_API_KEY=your_huggingface_api_key
+HUGGINGFACE_MODEL=meta-llama/Llama-2-70b-chat-hf
+
+# Replicate
+REPLICATE_API_KEY=your_replicate_api_key
+REPLICATE_MODEL=meta/llama-2-70b-chat:02e509c789ffa4e38dc4c3c8c0b5c7c0b5c7c0b5c7c0b5c7c0b5c7c0b5c7c0b5c7c0b5
+
+# Together AI
+TOGETHER_API_KEY=your_together_api_key
+TOGETHER_MODEL=togethercomputer/llama-2-70b
+
+# Perplexity
+PERPLEXITY_API_KEY=your_perplexity_api_key
+PERPLEXITY_MODEL=llama-3.1-8b-instant
+
 # Local Ollama
 OLLAMA_BASE_URL=http://localhost:11434
 OLLAMA_MODEL=llama2
@@ -69,8 +142,15 @@ LLAMA_MODEL_PATH=/path/to/your/model.gguf
 ```bash
 # Use specific model
 inteli-packs --model gemini
-inteli-packs --model gpt4
+inteli-packs --model openai
 inteli-packs --model claude
+inteli-packs --model openrouter
+inteli-packs --model azure
+inteli-packs --model cohere
+inteli-packs --model huggingface
+inteli-packs --model replicate
+inteli-packs --model together
+inteli-packs --model perplexity
 inteli-packs --model ollama
 inteli-packs --model llama
 
@@ -158,7 +238,7 @@ inteli-packs --security  # Builds on previous context
 The system automatically switches between providers:
 
 1. **Primary Provider**: Gemini (default)
-2. **Fallback Chain**: GPT-4 → Claude → Ollama → LLaMA
+2. **Fallback Chain**: OpenAI → Claude → OpenRouter → Azure → Cohere → Ollama → Together → Perplexity → Hugging Face → Replicate → LLaMA
 3. **Error Handling**: Automatic retry with different provider
 4. **Rate Limiting**: Smart provider rotation
 
@@ -219,7 +299,7 @@ inteli-packs --testing
 
 ```bash
 # Use specific AI model
-inteli-packs --model gpt4 --auto
+inteli-packs --model openai --auto
 
 # With custom profile
 inteli-packs --profile detailed --auto
@@ -240,11 +320,12 @@ const ai = new AIProvider();
 
 // Set up providers
 ai.registerProvider('gemini', { apiKey: process.env.GEMINI_API_KEY });
-ai.registerProvider('gpt4', { apiKey: process.env.OPENAI_API_KEY });
+ai.registerProvider('openai', { apiKey: process.env.OPENAI_API_KEY });
+ai.registerProvider('openrouter', { apiKey: process.env.OPENROUTER_API_KEY });
 
 // Run analysis
 const result = await ai.analyzeProject({
-  model: 'gemini',
+  model: 'openrouter',
   features: ['dependencies', 'security', 'performance']
 });
 ```
@@ -254,9 +335,16 @@ const result = await ai.analyzeProject({
 ### 🎯 Choosing the Right Model
 
 - **Gemini**: General analysis, cost-effective
-- **GPT-4**: Complex analysis, detailed insights
+- **OpenAI**: Complex analysis, detailed insights
 - **Claude**: Security-focused analysis
-- **Ollama**: Privacy-sensitive projects
+- **OpenRouter**: Model comparison, cost optimization
+- **Azure**: Enterprise environments, compliance
+- **Cohere**: Text generation, summarization
+- **Hugging Face**: Specialized models, research
+- **Replicate**: Custom models, batch processing
+- **Together AI**: Open source models, cost-effective
+- **Perplexity**: Real-time analysis, quick responses
+- **Ollama**: Privacy-sensitive projects, offline work
 - **LLaMA**: Custom models, enterprise use
 
 ### 🔧 Configuration Tips
@@ -283,6 +371,7 @@ const result = await ai.analyzeProject({
 # Check environment variables
 echo $GEMINI_API_KEY
 echo $OPENAI_API_KEY
+echo $OPENROUTER_API_KEY
 
 # Test provider
 inteli-packs --test-models
@@ -346,14 +435,14 @@ class AIProvider {
 
 ```javascript
 const options = {
-  model: 'gemini',           // AI model to use
-  profile: 'detailed',       // Analysis profile
-  plugins: ['security'],     // Enabled plugins
-  timeout: 30000,           // Request timeout
-  maxRetries: 3,            // Retry attempts
-  includeDevDeps: true,     // Include dev dependencies
-  analyzeTests: true,       // Analyze test files
-  verbose: false            // Verbose output
+  model: 'openrouter',        // AI model to use
+  profile: 'detailed',        // Analysis profile
+  plugins: ['security'],      // Enabled plugins
+  timeout: 30000,            // Request timeout
+  maxRetries: 3,             // Retry attempts
+  includeDevDeps: true,      // Include dev dependencies
+  analyzeTests: true,        // Analyze test files
+  verbose: false             // Verbose output
 };
 ```
 

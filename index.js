@@ -20,7 +20,7 @@ program
   .version('1.0.0')
   .option('-a, --auto', 'Run in non-interactive mode with full optimization')
   .option('-v, --verbose', 'Enable verbose logging')
-  .option('--model <model>', 'AI model to use (gemini, gpt4, claude, ollama, llama)', 'gemini')
+  .option('--model <model>', 'AI model to use (gemini, openai, claude, openrouter, azure, cohere, ollama, together, perplexity, huggingface, replicate, llama)', 'gemini')
   .option('--profile <profile>', 'Use specific prompt profile (default, detailed, minimal)')
   .option('--plugins <plugins>', 'Enable specific plugins (comma-separated)')
   .option('--security', 'Run security analysis only')
