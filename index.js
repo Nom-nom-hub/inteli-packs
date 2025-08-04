@@ -49,11 +49,13 @@ async function main() {
     
     // Handle AI model options
     if (options.listModels) {
+      console.log(chalk.blue('📋 Listing available models...'));
       await commandsHandler.listAvailableModels();
       return;
     }
     
     if (options.testModels) {
+      console.log(chalk.blue('🧪 Testing all models...'));
       await commandsHandler.testAllModels();
       return;
     }
@@ -110,7 +112,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // Run the application
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === `file://${process.argv[1]}` || import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
   main();
 }
 

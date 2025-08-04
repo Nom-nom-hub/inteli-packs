@@ -42,6 +42,20 @@ class CommandsHandler {
   }
 
   /**
+   * Load package.json using the analyzer
+   * @returns {Object} - Package.json content and analyzer
+   */
+  loadPackageJson() {
+    try {
+      const packageJson = this.analyzer.loadPackageJson();
+      return { analyzer: packageJson };
+    } catch (error) {
+      logWarning('⚠️  Could not load package.json:', error.message);
+      return { analyzer: {} };
+    }
+  }
+
+  /**
    * Show main interactive menu
    */
   async showMainMenu() {
