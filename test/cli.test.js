@@ -155,7 +155,7 @@ const testDependencyAnalysis = async () => {
 /**
  * Test security analysis
  */
-async const testSecurityAnalysis = () {
+const testSecurityAnalysis = async () => {
   console.log('🧪 Testing security analysis...');
   
   const projectDir = await createTestProject('security-test', {
@@ -178,7 +178,7 @@ async const testSecurityAnalysis = () {
 /**
  * Test testing analysis
  */
-async const testTestingAnalysis = () {
+const testTestingAnalysis = async () => {
   console.log('🧪 Testing testing analysis...');
   
   const projectDir = await createTestProject('testing-test', {
@@ -217,7 +217,7 @@ test('adds 1 + 2 to equal 3', () => {
 /**
  * Test DevOps generation
  */
-async const testDevOpsGeneration = () {
+const testDevOpsGeneration = async () => {
   console.log('🧪 Testing DevOps generation...');
   
   const projectDir = await createTestProject('devops-test');
