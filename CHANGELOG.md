@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2024-08-04
+
+### Fixed
+- **Test Rate Limits**: Fixed test suite to use mock API keys and avoid rate limit errors
+- **Test Reliability**: Updated tests to use `--list-models` and `--test-models` instead of full analysis
+- **Multi-Provider Testing**: Tests now properly check for multiple AI providers (Gemini, Groq)
+
 ## [1.0.8] - 2024-08-04
 
 ### Added
