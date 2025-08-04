@@ -55,8 +55,8 @@ export default {
           "label": "Documentation"
         },
         {
-          "to": "/blog",
-          "label": "Blog",
+          "to": "/docs/intro",
+          "label": "Documentation",
           "position": "left"
         },
         {
@@ -82,8 +82,8 @@ export default {
               "to": "/docs/installation"
             },
             {
-              "label": "Usage",
-              "to": "/docs/usage"
+              "label": "Quick Start",
+              "to": "/docs/quick-start"
             }
           ]
         },
@@ -108,8 +108,8 @@ export default {
           "title": "More",
           "items": [
             {
-              "label": "Blog",
-              "to": "/blog"
+              "label": "Documentation",
+              "to": "/docs/intro"
             },
             {
               "label": "GitHub",
