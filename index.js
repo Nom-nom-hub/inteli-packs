@@ -65,6 +65,12 @@ async function main() {
       await commandsHandler.setAIModel(options.model);
     }
     
+    // Handle plugins option
+    if (options.plugins) {
+      const pluginList = options.plugins.split(',').map(p => p.trim());
+      await commandsHandler.pluginManager.enablePlugins(pluginList);
+    }
+    
     if (options.auto) {
       console.log(chalk.yellow('🔄 Running in auto mode...'));
       await commandsHandler.handleAutoMode();

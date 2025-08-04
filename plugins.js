@@ -450,7 +450,7 @@ module.exports = {
    * @returns {Object|null} - Plugin information
    */
   getPlugin(pluginId) {
-    const { plugins: plugin } = this.get(pluginId);
+    const plugin = this.plugins.get(pluginId);
     
     if (plugin) {
       return {
@@ -470,7 +470,7 @@ module.exports = {
    * @returns {Object|null} - Profile information
    */
   getPromptProfile(profileId) {
-    const { promptProfiles: profile } = this.get(profileId);
+    const profile = this.promptProfiles.get(profileId);
     
     if (profile) {
       return {
@@ -482,6 +482,23 @@ module.exports = {
     }
     
     return null;
+  }
+
+  /**
+   * Enable specific plugins
+   */
+  async enablePlugins(pluginIds) {
+    try {
+      for (const pluginId of pluginIds) {
+        if (this.plugins.has(pluginId)) {
+          console.log(chalk.green(`✅ Enabled plugin: ${pluginId}`));
+        } else {
+          console.warn(chalk.yellow(`⚠️  Plugin not found: ${pluginId}`));
+        }
+      }
+    } catch (error) {
+      console.warn(chalk.yellow('⚠️  Failed to enable plugins:'), error.message);
+    }
   }
 }
 

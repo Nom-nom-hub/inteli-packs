@@ -484,28 +484,14 @@ class CommandsHandler {
    */
   async automationTools() {
     try {
-      const { tool } = await inquirer.prompt([
-        {
-          type: 'list',
-          name: 'tool',
-          message: 'Select automation tool:',
-          choices: [
-            { name: '🔧 Auto-refactor code', value: 'refactor' },
-            { name: '📝 Generate changelog', value: 'changelog' },
-            { name: '🔄 Migrate to ESM', value: 'esm' },
-            { name: '🎨 Auto-format code', value: 'format' },
-            { name: '⚡ Run all automation', value: 'all' },
-          ],
-        },
-      ]);
+      logInfo('⚡ Starting automation tools...');
 
-      logInfo(`⚡ Starting ${tool} automation...`);
-
-      const options = {};
-      if (tool === 'refactor' || tool === 'all') options.refactor = true;
-      if (tool === 'changelog' || tool === 'all') options.changelog = true;
-      if (tool === 'esm' || tool === 'all') options.esm = true;
-      if (tool === 'format' || tool === 'all') options.format = true;
+      const options = {
+        refactor: true,
+        changelog: true,
+        esm: true,
+        format: true
+      };
 
       const automationResults = await this.automationEngine.runAutomation(options);
 
