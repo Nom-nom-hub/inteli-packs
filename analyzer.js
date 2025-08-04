@@ -70,7 +70,7 @@ class ProjectAnalyzer {
     const items = await fs.readdir(dir);
 
     for (const item of items) {
-      const { join: fullPath } = path(dir, item);
+      const fullPath = path.join(dir, item);
       const stat = await fs.stat(fullPath);
 
       if (stat.isDirectory()) {
@@ -79,7 +79,7 @@ class ProjectAnalyzer {
           await this.scanDirectory(fullPath, files);
         }
       } else if (stat.isFile()) {
-        const { extname: ext } = path(item).toLowerCase();
+        const ext = path.extname(item).toLowerCase();
         if (this.sourceExtensions.includes(ext)) {
           files.push(fullPath);
         }
@@ -105,7 +105,7 @@ class ProjectAnalyzer {
     for (const filePath of filePaths) {
       try {
         const content = await fs.readFile(filePath, 'utf8');
-        const { analyzeFile: fileAnalysis } = this(content, filePath);
+        const fileAnalysis = this.analyzeFile(content, filePath);
 
         analysis.totalLines += fileAnalysis.lines;
         fileAnalysis.imports.forEach(imp => analysis.imports.add(imp));
@@ -126,17 +126,17 @@ class ProjectAnalyzer {
    * @returns {Object} - File analysis results
    */
   analyzeFile(content, filePath) {
-    const { split: lines } = content('\n');
+    const lines = content.split('\n');
     const imports = new Set();
     const usedPackages = new Set();
     const unusedImports = [];
 
     // Extract imports and used packages
-    for (const i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
 
       // Match import statements
-      const { match: importMatches } = line(
+      const importMatches = line.match(
         /import\s+(?:{[^}]*}|\*\s+as\s+\w+|\w+)\s+from\s+['"]([^'"]+)['"]/,
       );
       if (importMatches) {
@@ -145,13 +145,13 @@ class ProjectAnalyzer {
 
         // Check if it's a local import or external package
         if (!packageName.startsWith('.') && !packageName.startsWith('/')) {
-          const { split: mainPackage } = packageName('/')[0];
+          const mainPackage = packageName.split('/')[0];
           usedPackages.add(mainPackage);
         }
       }
 
       // Match require statements
-      const { match: requireMatches } = line(/require\s*\(\s*['"]([^'"]+)['"]\s*\)/);
+      const requireMatches = line.match(/require\s*\(\s*['"]([^'"]+)['"]\s*\)/);
       if (requireMatches) {
         const packageName = requireMatches[1];
         imports.add(packageName);

@@ -549,7 +549,7 @@ class CommandsHandler {
 
       switch (action) {
         case 'list':
-          const { pluginManager: plugins } = this.listPlugins();
+          const plugins = this.pluginManager.listPlugins();
           console.log(chalk.blue('📋 Available Plugins:'));
           plugins.forEach(plugin => {
             console.log(chalk.cyan(`  • ${plugin.name} - ${plugin.description}`));
@@ -557,7 +557,7 @@ class CommandsHandler {
           break;
 
         case 'profiles':
-          const { pluginManager: profiles } = this.listPromptProfiles();
+          const profiles = this.pluginManager.listPromptProfiles();
           console.log(chalk.blue('📋 Available Profiles:'));
           profiles.forEach(profile => {
             console.log(chalk.cyan(`  • ${profile.name} - ${profile.description}`));

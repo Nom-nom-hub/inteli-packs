@@ -67,7 +67,7 @@ async function main() {
     
     // Handle plugins option
     if (options.plugins) {
-      const pluginList = options.plugins.split(',').map(p => p.trim());
+      const pluginList = options.plugins.split(',').map(p => p.trim()).filter(p => p);
       await commandsHandler.pluginManager.enablePlugins(pluginList);
     }
     
