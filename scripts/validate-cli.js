@@ -55,7 +55,7 @@ try {
 }
 
 // Validate package.json bin field
-const { parse: packageJson } = JSON(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+  const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
 if (!packageJson.bin || !packageJson.bin['inteli-packs']) {
   console.error('❌ package.json missing bin field for inteli-packs');
   process.exit(1);

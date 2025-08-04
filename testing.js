@@ -152,7 +152,7 @@ class TestingAnalyzer {
       const content = await fs.readFile(coverageFile, 'utf8');
       
       if (coverageFile.endsWith('.json')) {
-        const { parse: coverage } = JSON(content);
+        const coverage = JSON.parse(content);
         return this.extractCoverageSummary(coverage);
       } else if (coverageFile.endsWith('.info')) {
         return this.parseLcovFile(content);
@@ -227,7 +227,7 @@ class TestingAnalyzer {
   async runCoverage() {
     try {
       // Check if npm test with coverage is available
-      const { parse: packageJson } = JSON(await fs.readFile('package.json', 'utf8'));
+      const packageJson = JSON.parse(await fs.readFile('package.json', 'utf8'));
       const { scripts: scripts } = packageJson || {};
 
       if (scripts['test:coverage'] || scripts.test?.includes('coverage')) {

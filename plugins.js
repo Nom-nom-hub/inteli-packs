@@ -140,7 +140,7 @@ class PluginManager {
         if (file.endsWith('.json')) {
           try {
             const { join: profilePath } = path(this.profilesDir, file);
-            const { parse: profile } = JSON(await fs.readFile(profilePath, 'utf8'));
+            const profile = JSON.parse(await fs.readFile(profilePath, 'utf8'));
             
             if (profile.profile?.name && profile.prompts) {
               this.promptProfiles.set(profile.id, profile);
@@ -299,7 +299,7 @@ module.exports = {
         return result;
       }
 
-      const { stringify: profileContent } = JSON({
+      const profileContent = JSON.stringify({
         id,
         name,
         description: description || 'Custom prompt profile',

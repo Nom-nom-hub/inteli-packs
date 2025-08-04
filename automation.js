@@ -371,9 +371,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     for (const filePath of filePaths) {
       try {
         // Check if Prettier is available
-        const { parse: packageJson } = JSON(await fs.readFile('package.json', 'utf8'));
-        const { devDependencies: hasPrettier } =
-          packageJson?.prettier || packageJson.dependencies?.prettier;
+        const packageJson = JSON.parse(await fs.readFile('package.json', 'utf8'));
+        const hasPrettier = packageJson?.devDependencies?.prettier || packageJson?.dependencies?.prettier;
 
         if (hasPrettier) {
           execSync(`npx prettier --write "${filePath}"`, { stdio: 'pipe' });
@@ -420,7 +419,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
       // Migrate to ESM if requested
       if (options.esm) {
-        const { parse: packageJson } = JSON(await fs.readFile('package.json', 'utf8'));
+        const packageJson = JSON.parse(await fs.readFile('package.json', 'utf8'));
         results.esmMigration = await this.migrateToESM(packageJson);
       }
 
