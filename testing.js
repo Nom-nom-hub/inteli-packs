@@ -77,7 +77,7 @@ class TestingAnalyzer {
    * @returns {Array} - Array of test scripts
    */
   analyzeTestScripts(packageJson) {
-    const { scripts: scripts } = packageJson || {};
+    const scripts = packageJson?.scripts || {};
     const testScripts = [];
 
     for (const [scriptName, scriptCommand] of Object.entries(scripts)) {
@@ -170,9 +170,9 @@ class TestingAnalyzer {
    * @returns {Object} - Parsed coverage data
    */
   parseLcovFile(content) {
-    const { split: lines } = content('\n');
-    const totalLines = 0;
-    const coveredLines = 0;
+    const lines = content.split('\n');
+    let totalLines = 0;
+    let coveredLines = 0;
 
     for (const line of lines) {
       if (line.startsWith('LF:')) {
@@ -197,8 +197,8 @@ class TestingAnalyzer {
    * @returns {Object} - Coverage summary
    */
   extractCoverageSummary(coverage) {
-    const totalLines = 0;
-    const coveredLines = 0;
+    let totalLines = 0;
+    let coveredLines = 0;
 
     for (const file in coverage) {
       if (coverage[file].s) {
@@ -234,7 +234,12 @@ class TestingAnalyzer {
         console.log(chalk.blue('📊 Running coverage analysis...'));
         
         const command = scripts['test:coverage'] || scripts.test;
-        execSync(command, { stdio: 'pipe', timeout: 30000 });
+        try {
+          execSync(command, { stdio: 'pipe', timeout: 30000 });
+        } catch (execError) {
+          // Coverage command failed, continue without coverage
+          console.warn(chalk.yellow('⚠️  Coverage command failed:'), execError.message);
+        }
         
         // Wait a moment for coverage files to be written
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -258,7 +263,7 @@ class TestingAnalyzer {
     const testFiles = await this.getTestFiles();
 
     for (const sourceFile of sourceFiles) {
-      const { getExpectedTestFile: expectedTestFile } = this(sourceFile);
+      const expectedTestFile = this.getExpectedTestFile(sourceFile);
       
       if (!testFiles.includes(expectedTestFile) && !this.hasTestFile(sourceFile, testFiles)) {
         missingTests.push({
@@ -283,25 +288,39 @@ class TestingAnalyzer {
 
     const scanDirectory = async (dir) => {
       try {
+        // Check if directory exists before trying to read it
+        if (!(await fs.pathExists(dir))) {
+          return;
+        }
+        
         const items = await fs.readdir(dir);
         
         for (const item of items) {
-          const { join: fullPath } = path(dir, item);
-          const stat = await fs.stat(fullPath);
+          const fullPath = path.join(dir, item);
           
-          if (stat.isDirectory()) {
-            if (!ignorePatterns.some(pattern => item.includes(pattern))) {
-              await scanDirectory(fullPath);
+          try {
+            const stat = await fs.stat(fullPath);
+            
+            if (stat.isDirectory()) {
+              if (!ignorePatterns.some(pattern => item.includes(pattern))) {
+                await scanDirectory(fullPath);
+              }
+            } else if (stat.isFile()) {
+              const ext = path.extname(item).toLowerCase();
+              if (sourceExtensions.includes(ext)) {
+                files.push(fullPath);
+              }
             }
-          } else if (stat.isFile()) {
-            const { extname: ext } = path(item).toLowerCase();
-            if (sourceExtensions.includes(ext)) {
-              files.push(fullPath);
-            }
+          } catch (statError) {
+            // Skip files/directories we can't access
+            continue;
           }
         }
       } catch (error) {
-        console.warn(chalk.yellow(`⚠️  Could not scan directory: ${dir}`));
+        // Only warn for directories that should exist but can't be accessed
+        if (await fs.pathExists(dir)) {
+          console.warn(chalk.yellow(`⚠️  Could not scan directory: ${dir}`));
+        }
       }
     };
 
@@ -320,25 +339,39 @@ class TestingAnalyzer {
 
     const scanDirectory = async (dir) => {
       try {
+        // Check if directory exists before trying to read it
+        if (!(await fs.pathExists(dir))) {
+          return;
+        }
+        
         const items = await fs.readdir(dir);
         
         for (const item of items) {
-          const { join: fullPath } = path(dir, item);
-          const stat = await fs.stat(fullPath);
+          const fullPath = path.join(dir, item);
           
-          if (stat.isDirectory()) {
-            if (testPatterns.some(pattern => item.includes(pattern))) {
-              await scanDirectory(fullPath);
+          try {
+            const stat = await fs.stat(fullPath);
+            
+            if (stat.isDirectory()) {
+              if (testPatterns.some(pattern => item.includes(pattern))) {
+                await scanDirectory(fullPath);
+              }
+            } else if (stat.isFile()) {
+              const ext = path.extname(item).toLowerCase();
+              if (testExtensions.some(testExt => item.endsWith(testExt))) {
+                files.push(fullPath);
+              }
             }
-          } else if (stat.isFile()) {
-            const { extname: ext } = path(item).toLowerCase();
-            if (testExtensions.some(testExt => item.endsWith(testExt))) {
-              files.push(fullPath);
-            }
+          } catch (statError) {
+            // Skip files/directories we can't access
+            continue;
           }
         }
       } catch (error) {
-        console.warn(chalk.yellow(`⚠️  Could not scan directory: ${dir}`));
+        // Only warn for directories that should exist but can't be accessed
+        if (await fs.pathExists(dir)) {
+          console.warn(chalk.yellow(`⚠️  Could not scan directory: ${dir}`));
+        }
       }
     };
 
@@ -352,8 +385,8 @@ class TestingAnalyzer {
    * @returns {string} - Expected test file path
    */
   getExpectedTestFile(sourceFile) {
-    const { dirname: dir } = path(sourceFile);
-    const { basename: name } = path(sourceFile, path.extname(sourceFile));
+    const dir = path.dirname(sourceFile);
+    const name = path.basename(sourceFile, path.extname(sourceFile));
     return path.join(dir, '__tests__', `${name}.test.js`);
   }
 
@@ -364,10 +397,10 @@ class TestingAnalyzer {
    * @returns {boolean} - True if test file exists
    */
   hasTestFile(sourceFile, testFiles) {
-    const { basename: sourceName } = path(sourceFile, path.extname(sourceFile));
+    const sourceName = path.basename(sourceFile, path.extname(sourceFile));
     
     return testFiles.some(testFile => {
-      const { basename: testName } = path(testFile, path.extname(testFile));
+      const testName = path.basename(testFile, path.extname(testFile));
       return testName.includes(sourceName) || testName.includes(sourceName.replace('.', ''));
     });
   }

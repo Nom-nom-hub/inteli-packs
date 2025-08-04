@@ -238,10 +238,13 @@ class SecurityAnalyzer {
     for (const filePath of sourceFiles) {
       try {
         const content = await fs.readFile(filePath, 'utf8');
-        const { analyzeFileForSecurityIssues: issues } = this(content, filePath);
+        const issues = this.analyzeFileForSecurityIssues(content, filePath);
         securityIssues.push(...issues);
       } catch (error) {
-        console.warn(chalk.yellow(`⚠️  Could not analyze file: ${filePath}`));
+        // Only warn for actual files that exist but can't be read
+        if (await fs.pathExists(filePath)) {
+          console.warn(chalk.yellow(`⚠️  Could not analyze file: ${filePath}`));
+        }
       }
     }
 
@@ -256,9 +259,9 @@ class SecurityAnalyzer {
    */
   analyzeFileForSecurityIssues(content, filePath) {
     const issues = [];
-    const { split: lines } = content('\n');
+    const lines = content.split('\n');
 
-    for (const i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       const lineNumber = i + 1;
 
@@ -327,25 +330,39 @@ class SecurityAnalyzer {
 
     const scanDirectory = async (dir) => {
       try {
+        // Check if directory exists before trying to read it
+        if (!(await fs.pathExists(dir))) {
+          return;
+        }
+        
         const items = await fs.readdir(dir);
         
         for (const item of items) {
           const fullPath = path.join(dir, item);
-          const stat = await fs.stat(fullPath);
           
-          if (stat.isDirectory()) {
-            if (!ignorePatterns.some(pattern => item.includes(pattern))) {
-              await scanDirectory(fullPath);
+          try {
+            const stat = await fs.stat(fullPath);
+            
+            if (stat.isDirectory()) {
+              if (!ignorePatterns.some(pattern => item.includes(pattern))) {
+                await scanDirectory(fullPath);
+              }
+            } else if (stat.isFile()) {
+              const ext = path.extname(item).toLowerCase();
+              if (sourceExtensions.includes(ext)) {
+                files.push(fullPath);
+              }
             }
-          } else if (stat.isFile()) {
-            const ext = path.extname(item).toLowerCase();
-            if (sourceExtensions.includes(ext)) {
-              files.push(fullPath);
-            }
+          } catch (statError) {
+            // Skip files/directories we can't access
+            continue;
           }
         }
       } catch (error) {
-        console.warn(chalk.yellow(`⚠️  Could not scan directory: ${dir}`));
+        // Only warn for directories that should exist but can't be accessed
+        if (await fs.pathExists(dir)) {
+          console.warn(chalk.yellow(`⚠️  Could not scan directory: ${dir}`));
+        }
       }
     };
 
