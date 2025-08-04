@@ -122,7 +122,7 @@ const testBasicCLI = async () => {
   // Test version command
   const versionResult = runCLI('--version');
   assert(versionResult.success, 'Version command should work');
-  assert(versionResult.output.includes('1.0.6'), 'Version should be displayed');
+  assert(versionResult.output.includes('1.0.7'), 'Version should be displayed');
   
   console.log('✅ Basic CLI tests passed');
 }
