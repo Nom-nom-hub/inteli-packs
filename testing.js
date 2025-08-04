@@ -228,7 +228,7 @@ class TestingAnalyzer {
     try {
       // Check if npm test with coverage is available
       const packageJson = JSON.parse(await fs.readFile('package.json', 'utf8'));
-      const { scripts: scripts } = packageJson || {};
+      const scripts = packageJson?.scripts || {};
 
       if (scripts['test:coverage'] || scripts.test?.includes('coverage')) {
         console.log(chalk.blue('📊 Running coverage analysis...'));
@@ -239,12 +239,27 @@ class TestingAnalyzer {
         } catch (execError) {
           // Coverage command failed, continue without coverage
           console.warn(chalk.yellow('⚠️  Coverage command failed:'), execError.message);
+          return null; // Return null to prevent infinite loop
         }
         
         // Wait a moment for coverage files to be written
         await new Promise(resolve => setTimeout(resolve, 1000));
         
-        return await this.checkCoverage();
+        // Check for coverage files directly instead of calling checkCoverage again
+        const coverageFiles = [
+          'coverage/lcov.info',
+          'coverage/coverage.json',
+          'coverage/coverage-final.json',
+          '.nyc_output/out.json'
+        ];
+
+        for (const coverageFile of coverageFiles) {
+          if (await fs.pathExists(coverageFile)) {
+            return await this.parseCoverageFile(coverageFile);
+          }
+        }
+
+        return null;
       }
 
       return null;
@@ -411,7 +426,7 @@ class TestingAnalyzer {
    * @returns {string} - Priority level
    */
   getTestPriority(sourceFile) {
-    const { basename: fileName } = path(sourceFile);
+    const fileName = path.basename(sourceFile);
     
     if (fileName.includes('index') || fileName.includes('main')) {
       return 'high';
