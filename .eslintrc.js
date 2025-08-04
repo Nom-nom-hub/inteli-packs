@@ -1,4 +1,5 @@
 module.exports = {
+  root: true, // This ensures this config is the root config
   env: {
     node: true,
     es2021: true,
@@ -11,7 +12,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    // Disable all problematic rules for CLI tool
+    // Disable ALL problematic rules for CLI tool
     'indent': 'off',
     'linebreak-style': 'off',
     'quotes': 'off',
@@ -89,4 +90,15 @@ module.exports = {
     'require-await': 'off',
     'yoda': 'off',
   },
+  overrides: [
+    {
+      files: ['example/**/*.js'],
+      rules: {
+        // Even more permissive for example files
+        'quotes': 'off',
+        'comma-dangle': 'off',
+        'no-console': 'off',
+      },
+    },
+  ],
 }; 

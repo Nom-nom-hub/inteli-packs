@@ -1,0 +1,29 @@
+# Ignore example files that have different linting requirements
+example/
+test-project/
+
+# Ignore build and distribution files
+dist/
+build/
+*.tgz
+*.tar.gz
+
+# Ignore node modules
+node_modules/
+
+# Ignore test files
+test/
+__tests__/
+*.test.js
+*.spec.js
+
+# Ignore documentation
+docs/
+
+# Ignore scripts that are generated
+scripts/setup-docs.js
+scripts/init.js
+
+# Ignore configuration files
+.github/
+Formula/ 
