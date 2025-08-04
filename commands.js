@@ -3,18 +3,18 @@
  * Manages interactive CLI menu and command execution
  */
 
-const inquirer = require('inquirer');
-const chalk = require('chalk');
-const ProjectAnalyzer = require('./analyzer');
-const GeminiAPI = require('./gemini');
-const AIProvider = require('./ai-providers');
-const SecurityAnalyzer = require('./security');
-const TestingAnalyzer = require('./testing');
-const DevOpsGenerator = require('./devops');
-const AutomationEngine = require('./automation');
-const PluginManager = require('./plugins');
-const DocumentationGenerator = require('./documentation');
-const { loadEnvironment, logInfo, logSuccess, logError, logWarning } = require('./utils');
+import inquirer from 'inquirer';
+import chalk from 'chalk';
+import ProjectAnalyzer from './analyzer.js';
+import GeminiAPI from './gemini.js';
+import AIProvider from './ai-providers.js';
+import SecurityAnalyzer from './security.js';
+import TestingAnalyzer from './testing.js';
+import DevOpsGenerator from './devops.js';
+import AutomationEngine from './automation.js';
+import PluginManager from './plugins.js';
+import DocumentationGenerator from './documentation.js';
+import { loadEnvironment, logInfo, logSuccess, logError, logWarning } from './utils.js';
 
 class CommandsHandler {
   constructor() {
@@ -56,7 +56,7 @@ class CommandsHandler {
       { name: '⚡ Automation tools', value: 'automation' },
       { name: '🔌 Plugin management', value: 'plugins' },
       { name: '📚 Documentation generation', value: 'documentation' },
-      { name: '❌ Exit', value: 'exit' }
+      { name: '❌ Exit', value: 'exit' },
     ];
 
     const { action } = await inquirer.prompt([
@@ -64,8 +64,8 @@ class CommandsHandler {
         type: 'list',
         name: 'action',
         message: 'What would you like to do?',
-        choices
-      }
+        choices,
+      },
     ]);
 
     switch (action) {
@@ -117,12 +117,12 @@ class CommandsHandler {
   async analyzeDependencies() {
     try {
       logInfo('🔍 Starting dependency analysis...');
-      
+
       // Execute pre-analysis plugins
       const preResults = await this.pluginManager.executePlugins('pre-analysis', {});
-      
+
       const analysis = await this.analyzer.analyzeDependencies();
-      
+
       console.log(chalk.blue('📊 Project Analysis Results:'));
       console.log(chalk.gray('──────────────────────────────────────────────────'));
       console.log(chalk.cyan(`📁 Total files: ${analysis.totalFiles}`));
@@ -141,7 +141,7 @@ class CommandsHandler {
 
       // Get AI recommendations
       console.log(chalk.blue('\n🤖 Getting AI-powered recommendations...'));
-      const packageJson = this.analyzer.loadPackageJson();
+      const { analyzer: packageJson } = this.loadPackageJson();
       const sourceFiles = await this.analyzer.getSourceFiles();
       const sourceContents = await Promise.all(
         sourceFiles.map(async file => {
@@ -150,21 +150,25 @@ class CommandsHandler {
           } catch {
             return '';
           }
-        })
+        }),
       );
 
       const aiAnalysis = await this.gemini.analyzeDependencies(packageJson, sourceContents);
-      
+
       if (aiAnalysis.rawResponse) {
-        console.log(chalk.yellow('⚠️  Could not parse Gemini response as JSON, returning raw text'));
+        console.log(
+          chalk.yellow('⚠️  Could not parse Gemini response as JSON, returning raw text'),
+        );
         console.log(aiAnalysis.rawResponse);
       } else {
         this.displayAIRecommendations(aiAnalysis);
       }
 
       // Execute post-analysis plugins
-      const postResults = await this.pluginManager.executePlugins('post-analysis', { analysis, aiAnalysis });
-
+      const postResults = await this.pluginManager.executePlugins('post-analysis', {
+        analysis,
+        aiAnalysis,
+      });
     } catch (error) {
       logError('❌ Analysis failed:', error.message);
     }
@@ -174,17 +178,21 @@ class CommandsHandler {
    * Display AI recommendations
    */
   displayAIRecommendations(analysis) {
-    if (analysis.recommendations && analysis.recommendations.length > 0) {
+    if (analysis.analysis?.recommendations.length > 0) {
       console.log(chalk.blue('\n💡 AI Recommendations:'));
       analysis.recommendations.forEach(rec => {
         console.log(chalk.cyan(`  • ${rec}`));
       });
     }
 
-    if (analysis.suggestedReplacements && analysis.suggestedReplacements.length > 0) {
+    if (analysis.analysis?.suggestedReplacements.length > 0) {
       console.log(chalk.blue('\n🔄 Suggested Replacements:'));
       analysis.suggestedReplacements.forEach(replacement => {
-        console.log(chalk.yellow(`  • ${replacement.oldPackage} → ${replacement.newPackage}: ${replacement.reason}`));
+        console.log(
+          chalk.yellow(
+            `  • ${replacement.oldPackage} → ${replacement.newPackage}: ${replacement.reason}`,
+          ),
+        );
       });
     }
   }
@@ -195,9 +203,9 @@ class CommandsHandler {
   async cleanupPackages() {
     try {
       logInfo('🧹 Starting cleanup process...');
-      
+
       const analysis = await this.analyzer.analyzeDependencies();
-      
+
       if (analysis.unusedDependencies.length === 0) {
         console.log(chalk.green('✅ No unused dependencies found!'));
         return;
@@ -213,13 +221,13 @@ class CommandsHandler {
           type: 'confirm',
           name: 'confirm',
           message: 'Do you want to remove these unused dependencies?',
-          default: false
-        }
+          default: false,
+        },
       ]);
 
       if (confirm) {
         console.log(chalk.blue('🗑️  Removing unused dependencies...'));
-        
+
         for (const dep of analysis.unusedDependencies) {
           try {
             const { execSync } = require('child_process');
@@ -229,7 +237,7 @@ class CommandsHandler {
             logError(`❌ Failed to remove ${dep}:`, error.message);
           }
         }
-        
+
         logSuccess('✅ Cleanup completed!');
       }
     } catch (error) {
@@ -243,19 +251,18 @@ class CommandsHandler {
   async generateReadme() {
     try {
       logInfo('📄 Generating README boilerplate...');
-      
+
       // Execute pre-generation plugins
       await this.pluginManager.executePlugins('pre-generation', {});
-      
-      const packageJson = this.analyzer.loadPackageJson();
+
+      const { analyzer: packageJson } = this.loadPackageJson();
       const readme = await this.gemini.generateReadme(packageJson);
-      
+
       await require('fs-extra').writeFile('README.md', readme);
       logSuccess('✅ README.md generated successfully!');
-      
+
       // Execute post-generation plugins
       await this.pluginManager.executePlugins('post-generation', { readme });
-      
     } catch (error) {
       logError('❌ README generation failed:', error.message);
     }
@@ -267,9 +274,9 @@ class CommandsHandler {
   async autoFixIssues() {
     try {
       logInfo('🛠 Auto-fixing common project issues...');
-      
+
       const issues = await this.analyzer.checkCommonIssues();
-      
+
       if (issues.totalIssues === 0) {
         console.log(chalk.green('✅ No issues found to fix!'));
         return;
@@ -285,26 +292,26 @@ class CommandsHandler {
           type: 'confirm',
           name: 'confirm',
           message: 'Do you want to auto-fix these issues?',
-          default: false
-        }
+          default: false,
+        },
       ]);
 
       if (confirm) {
         console.log(chalk.blue('🔧 Fixing issues...'));
-        
+
         // Generate missing files
         if (issues.issues.includes('Missing .gitignore file')) {
           await this.generateGitignore();
         }
-        
+
         if (issues.issues.includes('Missing ESLint configuration')) {
           await this.generateEslintConfig();
         }
-        
+
         if (issues.issues.includes('Missing Prettier configuration')) {
           await this.generatePrettierConfig();
         }
-        
+
         logSuccess('✅ Auto-fix completed!');
       }
     } catch (error) {
@@ -318,43 +325,48 @@ class CommandsHandler {
   async securityAnalysis() {
     try {
       logInfo('🔒 Starting security analysis...');
-      
-      const packageJson = this.analyzer.loadPackageJson();
+
+      const { analyzer: packageJson } = this.loadPackageJson();
       const securityResults = await this.securityAnalyzer.analyzeSecurity(packageJson);
-      
+
       console.log(chalk.blue('🔒 Security Analysis Results:'));
       console.log(chalk.gray('──────────────────────────────────────────────────'));
-      
+
       if (securityResults.vulnerabilities.length > 0) {
-        console.log(chalk.red(`❌ Vulnerabilities found: ${securityResults.vulnerabilities.length}`));
+        console.log(
+          chalk.red(`❌ Vulnerabilities found: ${securityResults.vulnerabilities.length}`),
+        );
         securityResults.vulnerabilities.forEach(vuln => {
           console.log(chalk.red(`  • ${vuln.package}@${vuln.version} - ${vuln.severity}`));
         });
       } else {
         console.log(chalk.green('✅ No vulnerabilities detected'));
       }
-      
+
       if (securityResults.suspiciousPackages.length > 0) {
-        console.log(chalk.yellow(`⚠️  Suspicious packages: ${securityResults.suspiciousPackages.length}`));
+        console.log(
+          chalk.yellow(`⚠️  Suspicious packages: ${securityResults.suspiciousPackages.length}`),
+        );
         securityResults.suspiciousPackages.forEach(pkg => {
           console.log(chalk.yellow(`  • ${pkg.package}@${pkg.version} (score: ${pkg.score})`));
         });
       }
-      
+
       if (securityResults.securityIssues.length > 0) {
-        console.log(chalk.red(`🔍 Security issues in code: ${securityResults.securityIssues.length}`));
+        console.log(
+          chalk.red(`🔍 Security issues in code: ${securityResults.securityIssues.length}`),
+        );
         securityResults.securityIssues.forEach(issue => {
           console.log(chalk.red(`  • ${issue.file}:${issue.line} - ${issue.description}`));
         });
       }
-      
+
       if (securityResults.recommendations.length > 0) {
         console.log(chalk.blue('\n💡 Security Recommendations:'));
         securityResults.recommendations.forEach(rec => {
           console.log(chalk.cyan(`  • ${rec}`));
         });
       }
-      
     } catch (error) {
       logError('❌ Security analysis failed:', error.message);
     }
@@ -366,46 +378,49 @@ class CommandsHandler {
   async testingAnalysis() {
     try {
       logInfo('🧪 Starting testing analysis...');
-      
-      const packageJson = this.analyzer.loadPackageJson();
+
+      const { analyzer: packageJson } = this.loadPackageJson();
       const testingResults = await this.testingAnalyzer.analyzeTesting(packageJson);
-      
+
       console.log(chalk.blue('🧪 Testing Analysis Results:'));
       console.log(chalk.gray('──────────────────────────────────────────────────'));
-      
+
       if (testingResults.testFramework) {
         console.log(chalk.green(`✅ Test framework: ${testingResults.testFramework}`));
       } else {
         console.log(chalk.yellow('⚠️  No test framework detected'));
       }
-      
+
       if (testingResults.testScripts.length > 0) {
         console.log(chalk.green(`✅ Test scripts: ${testingResults.testScripts.length}`));
         testingResults.testScripts.forEach(script => {
           console.log(chalk.cyan(`  • ${script.name} (${script.type})`));
         });
       }
-      
+
       if (testingResults.coverage) {
-        console.log(chalk.blue(`📊 Coverage: ${testingResults.coverage.percentage}% (${testingResults.coverage.covered}/${testingResults.coverage.total} lines)`));
+        console.log(
+          chalk.blue(
+            `📊 Coverage: ${testingResults.coverage.percentage}% (${testingResults.coverage.covered}/${testingResults.coverage.total} lines)`,
+          ),
+        );
       } else {
         console.log(chalk.yellow('⚠️  No coverage data available'));
       }
-      
+
       if (testingResults.missingTests.length > 0) {
         console.log(chalk.yellow(`📝 Missing tests: ${testingResults.missingTests.length} files`));
         testingResults.missingTests.slice(0, 5).forEach(test => {
           console.log(chalk.yellow(`  • ${test.sourceFile} (${test.priority} priority)`));
         });
       }
-      
+
       if (testingResults.recommendations.length > 0) {
         console.log(chalk.blue('\n💡 Testing Recommendations:'));
         testingResults.recommendations.forEach(rec => {
           console.log(chalk.cyan(`  • ${rec}`));
         });
       }
-      
     } catch (error) {
       logError('❌ Testing analysis failed:', error.message);
     }
@@ -417,34 +432,33 @@ class CommandsHandler {
   async devOpsGeneration() {
     try {
       logInfo('🚀 Starting DevOps generation...');
-      
-      const packageJson = this.analyzer.loadPackageJson();
+
+      const { analyzer: packageJson } = this.loadPackageJson();
       const devOpsResults = await this.devOpsGenerator.generateAllDevOps(packageJson);
-      
+
       console.log(chalk.blue('🚀 DevOps Generation Results:'));
       console.log(chalk.gray('──────────────────────────────────────────────────'));
-      
+
       if (devOpsResults.workflows.length > 0) {
         console.log(chalk.green(`✅ GitHub Actions workflows: ${devOpsResults.workflows.length}`));
         devOpsResults.workflows.forEach(workflow => {
           console.log(chalk.cyan(`  • ${workflow.name} - ${workflow.status}`));
         });
       }
-      
+
       if (devOpsResults.docker.length > 0) {
         console.log(chalk.green(`🐳 Docker files: ${devOpsResults.docker.length}`));
         devOpsResults.docker.forEach(docker => {
           console.log(chalk.cyan(`  • ${docker.name} - ${docker.status}`));
         });
       }
-      
+
       if (devOpsResults.errors.length > 0) {
         console.log(chalk.red(`❌ Errors: ${devOpsResults.errors.length}`));
         devOpsResults.errors.forEach(error => {
           console.log(chalk.red(`  • ${error}`));
         });
       }
-      
     } catch (error) {
       logError('❌ DevOps generation failed:', error.message);
     }
@@ -465,47 +479,48 @@ class CommandsHandler {
             { name: '📝 Generate changelog', value: 'changelog' },
             { name: '🔄 Migrate to ESM', value: 'esm' },
             { name: '🎨 Auto-format code', value: 'format' },
-            { name: '⚡ Run all automation', value: 'all' }
-          ]
-        }
+            { name: '⚡ Run all automation', value: 'all' },
+          ],
+        },
       ]);
 
       logInfo(`⚡ Starting ${tool} automation...`);
-      
+
       const options = {};
       if (tool === 'refactor' || tool === 'all') options.refactor = true;
       if (tool === 'changelog' || tool === 'all') options.changelog = true;
       if (tool === 'esm' || tool === 'all') options.esm = true;
       if (tool === 'format' || tool === 'all') options.format = true;
-      
+
       const automationResults = await this.automationEngine.runAutomation(options);
-      
+
       console.log(chalk.blue('⚡ Automation Results:'));
       console.log(chalk.gray('──────────────────────────────────────────────────'));
-      
+
       if (automationResults.refactoring.length > 0) {
         console.log(chalk.green(`✅ Refactored files: ${automationResults.refactoring.length}`));
       }
-      
+
       if (automationResults.changelog) {
         console.log(chalk.green('✅ Changelog generated'));
       }
-      
+
       if (automationResults.esmMigration) {
         console.log(chalk.green('✅ ESM migration completed'));
       }
-      
+
       if (automationResults.formatting) {
-        console.log(chalk.green(`✅ Formatted files: ${automationResults.formatting.formatted.length}`));
+        console.log(
+          chalk.green(`✅ Formatted files: ${automationResults.formatting.formatted.length}`),
+        );
       }
-      
+
       if (automationResults.errors.length > 0) {
         console.log(chalk.red(`❌ Errors: ${automationResults.errors.length}`));
         automationResults.errors.forEach(error => {
           console.log(chalk.red(`  • ${error}`));
         });
       }
-      
     } catch (error) {
       logError('❌ Automation failed:', error.message);
     }
@@ -526,39 +541,44 @@ class CommandsHandler {
             { name: '📋 List profiles', value: 'profiles' },
             { name: '➕ Create plugin', value: 'create' },
             { name: '➕ Create profile', value: 'create_profile' },
-            { name: '🔙 Back', value: 'back' }
-          ]
-        }
+            { name: '🔙 Back', value: 'back' },
+          ],
+        },
       ]);
 
       switch (action) {
         case 'list':
-          const plugins = this.pluginManager.listPlugins();
+          const { pluginManager: plugins } = this.listPlugins();
           console.log(chalk.blue('📋 Available Plugins:'));
           plugins.forEach(plugin => {
             console.log(chalk.cyan(`  • ${plugin.name} - ${plugin.description}`));
           });
           break;
-          
+
         case 'profiles':
-          const profiles = this.pluginManager.listPromptProfiles();
+          const { pluginManager: profiles } = this.listPromptProfiles();
           console.log(chalk.blue('📋 Available Profiles:'));
           profiles.forEach(profile => {
             console.log(chalk.cyan(`  • ${profile.name} - ${profile.description}`));
           });
           break;
-          
+
         case 'create':
           // Simplified plugin creation
-          console.log(chalk.yellow('⚠️  Plugin creation requires manual setup. Check the docs for examples.'));
+          console.log(
+            chalk.yellow('⚠️  Plugin creation requires manual setup. Check the docs for examples.'),
+          );
           break;
-          
+
         case 'create_profile':
           // Simplified profile creation
-          console.log(chalk.yellow('⚠️  Profile creation requires manual setup. Check the docs for examples.'));
+          console.log(
+            chalk.yellow(
+              '⚠️  Profile creation requires manual setup. Check the docs for examples.',
+            ),
+          );
           break;
       }
-      
     } catch (error) {
       logError('❌ Plugin management failed:', error.message);
     }
@@ -570,29 +590,28 @@ class CommandsHandler {
   async documentationGeneration() {
     try {
       logInfo('📚 Generating comprehensive documentation...');
-      
-      const packageJson = this.analyzer.loadPackageJson();
+
+      const { analyzer: packageJson } = this.loadPackageJson();
       const docsResults = await this.documentationGenerator.generateDocumentation(packageJson);
-      
+
       console.log(chalk.blue('📚 Documentation Generation Results:'));
       console.log(chalk.gray('──────────────────────────────────────────────────'));
-      
+
       if (docsResults.files.length > 0) {
         console.log(chalk.green(`✅ Generated files: ${docsResults.files.length}`));
         docsResults.files.forEach(file => {
           console.log(chalk.cyan(`  • ${file.path} (${file.type})`));
         });
       }
-      
+
       if (docsResults.errors.length > 0) {
         console.log(chalk.red(`❌ Errors: ${docsResults.errors.length}`));
         docsResults.errors.forEach(error => {
           console.log(chalk.red(`  • ${error}`));
         });
       }
-      
+
       console.log(chalk.blue('\n📖 Documentation is now available in the `docs/` folder'));
-      
     } catch (error) {
       logError('❌ Documentation generation failed:', error.message);
     }
@@ -790,9 +809,9 @@ jspm_packages/
    */
   async generateEslintConfig() {
     try {
-      const packageJson = this.analyzer.loadPackageJson();
+      const { analyzer: packageJson } = this.loadPackageJson();
       const eslintConfig = await this.gemini.generateEslintConfig(packageJson);
-      
+
       await require('fs-extra').writeFile('.eslintrc.js', eslintConfig);
       logSuccess('✅ Generated .eslintrc.js');
     } catch (error) {
@@ -806,7 +825,7 @@ jspm_packages/
   async generatePrettierConfig() {
     try {
       const prettierConfig = await this.gemini.generatePrettierConfig();
-      
+
       await require('fs-extra').writeFile('.prettierrc', prettierConfig);
       logSuccess('✅ Generated .prettierrc');
     } catch (error) {
@@ -820,26 +839,25 @@ jspm_packages/
   async handleAutoMode() {
     try {
       logInfo('🔄 Running comprehensive analysis and optimization...');
-      
+
       // Run all analyses
       await this.analyzeDependencies();
       await this.securityAnalysis();
       await this.testingAnalysis();
-      
+
       // Generate all files
       await this.generateReadme();
       await this.devOpsGeneration();
       await this.documentationGeneration();
-      
+
       // Run automation
       await this.automationEngine.runAutomation({
         refactor: true,
         changelog: true,
-        format: true
+        format: true,
       });
-      
+
       logSuccess('✅ Auto mode completed successfully!');
-      
     } catch (error) {
       logError('❌ Auto mode failed:', error.message);
     }
@@ -852,27 +870,30 @@ jspm_packages/
     try {
       console.log(chalk.blue.bold('\n🤖 Available AI Models:'));
       console.log(chalk.gray('='.repeat(50)));
-      
-      const status = this.aiProvider.getProviderStatus();
-      const available = this.aiProvider.getAvailableProviders();
-      
+
+      const { aiProvider: status } = this.getProviderStatus();
+      const { aiProvider: available } = this.getAvailableProviders();
+
       for (const [name, info] of Object.entries(status)) {
-        const statusIcon = info.available ? '✅' : '❌';
-        const statusText = info.available ? 'Available' : 'Unavailable';
-        const lastUsed = info.lastUsed ? ` (Last used: ${new Date(info.lastUsed).toLocaleString()})` : '';
-        const errorCount = info.errorCount > 0 ? ` (${info.errorCount} errors)` : '';
-        
+        const { available: statusIcon } = info ? '✅' : '❌';
+        const { available: statusText } = info ? 'Available' : 'Unavailable';
+        const { lastUsed: lastUsed } = info
+          ? ` (Last used: ${new Date(info.lastUsed).toLocaleString()})`
+          : '';
+        const { errorCount: errorCount } = info > 0 ? ` (${info.errorCount} errors)` : '';
+
         console.log(`${statusIcon} ${chalk.bold(name)}: ${statusText}${lastUsed}${errorCount}`);
       }
-      
+
       console.log(chalk.gray('\nEnvironment Variables:'));
       console.log(chalk.gray('- GEMINI_API_KEY: Gemini API key'));
       console.log(chalk.gray('- OPENAI_API_KEY: OpenAI API key'));
       console.log(chalk.gray('- ANTHROPIC_API_KEY: Anthropic API key'));
-      console.log(chalk.gray('- OLLAMA_BASE_URL: Ollama server URL (default: http://localhost:11434)'));
+      console.log(
+        chalk.gray('- OLLAMA_BASE_URL: Ollama server URL (default: http://localhost:11434)'),
+      );
       console.log(chalk.gray('- OLLAMA_MODEL: Ollama model name (default: llama2)'));
       console.log(chalk.gray('- LLAMA_MODEL_PATH: Path to local LLaMA model'));
-      
     } catch (error) {
       logError('❌ Failed to list models:', error.message);
     }
@@ -885,26 +906,24 @@ jspm_packages/
     try {
       console.log(chalk.blue.bold('\n🧪 Testing AI Models:'));
       console.log(chalk.gray('='.repeat(50)));
-      
-      const providers = this.aiProvider.getAvailableProviders();
-      
+
+      const { aiProvider: providers } = this.getAvailableProviders();
+
       for (const provider of providers) {
         console.log(chalk.yellow(`\nTesting ${provider}...`));
-        
+
         try {
-          const result = await this.aiProvider.query('Hello, this is a test message.', { 
+          const result = await this.aiProvider.query('Hello, this is a test message.', {
             provider,
-            timeout: 10000 
+            timeout: 10000,
           });
-          
+
           console.log(chalk.green(`✅ ${provider}: Success`));
           console.log(chalk.gray(`Response: ${result.text.substring(0, 100)}...`));
-          
         } catch (error) {
           console.log(chalk.red(`❌ ${provider}: ${error.message}`));
         }
       }
-      
     } catch (error) {
       logError('❌ Failed to test models:', error.message);
     }
@@ -918,14 +937,13 @@ jspm_packages/
       if (!this.aiProvider.providers.has(modelName)) {
         throw new Error(`Unknown AI model: ${modelName}`);
       }
-      
+
       this.aiProvider.setPrimaryProvider(modelName);
       console.log(chalk.green(`✅ Set AI model to: ${modelName}`));
-      
     } catch (error) {
       logError('❌ Failed to set AI model:', error.message);
     }
   }
 }
 
-module.exports = CommandsHandler; 
+export default CommandsHandler;

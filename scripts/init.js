@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
-const chalk = require('chalk');
+import fs from "fs";
+import path from "path";
+import { execSync  } from "child_process";
+import chalk from "chalk";
 
 console.log(chalk.blue('🚀 Inteli-Packs Init: Bootstrap a clean Node.js repository'));
 console.log(chalk.gray('Creating a new project with best practices...\n'));
 
 // Get project name from command line or use current directory
-const projectName = process.argv[2] || path.basename(process.cwd());
-const projectPath = path.resolve(process.cwd(), projectName);
+const { argv: projectName } = process[2] || path.basename(process.cwd());
+const { resolve: projectPath } = path(process.cwd(), projectName);
 
 // Create project directory if it doesn't exist
 if (!fs.existsSync(projectPath)) {
@@ -247,13 +247,13 @@ console.log(chalk.green('✅ Created jest.config.js'));
 // Create main index.js
 const mainFile = `#!/usr/bin/env node
 
-const chalk = require('chalk');
+import chalk from "chalk";
 
 console.log(chalk.blue('🚀 Welcome to your new Node.js project!'));
 console.log(chalk.gray('Created with Inteli-Packs'));
 
 // Your application code here
-function main() {
+const main = () {
   console.log(chalk.green('✅ Application is running'));
 }
 
@@ -392,12 +392,12 @@ fs.writeFileSync('LICENSE', license);
 console.log(chalk.green('✅ Created LICENSE'));
 
 // Create __tests__ directory and sample test
-const testDir = path.join(projectPath, '__tests__');
+const { join: testDir } = path(projectPath, '__tests__');
 if (!fs.existsSync(testDir)) {
   fs.mkdirSync(testDir);
 }
 
-const sampleTest = `const { main } = require('../index');
+const sampleTest = `import { main  } from "../index";
 
 describe('${projectName}', () => {
   test('main function exists', () => {

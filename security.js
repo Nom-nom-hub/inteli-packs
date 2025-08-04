@@ -3,10 +3,10 @@
  * Handles vulnerability scanning and security checks
  */
 
-const axios = require('axios');
-const chalk = require('chalk');
-const fs = require('fs-extra');
-const path = require('path');
+import axios from "axios";
+import chalk from "chalk";
+import fs from "fs-extra";
+import path from "path";
 
 class SecurityAnalyzer {
   constructor() {
@@ -88,7 +88,7 @@ class SecurityAnalyzer {
     for (const [packageName, version] of Object.entries(allDependencies)) {
       try {
         const vulnInfo = await this.getPackageVulnerabilityInfo(packageName, version);
-        if (vulnInfo.vulnerabilities && vulnInfo.vulnerabilities.length > 0) {
+        if (vulnInfo.vulnInfo?.vulnerabilities.length > 0) {
           vulnerabilities.push({
             package: packageName,
             version: version,
@@ -123,13 +123,13 @@ class SecurityAnalyzer {
         timeout: 5000
       });
 
-      const packageInfo = response.data;
+      const { data: packageInfo } = response;
       const vulnerabilities = [];
 
       // Check for known security issues
-      if (packageInfo.time && packageInfo.versions) {
-        const currentVersion = packageInfo.versions[version];
-        if (currentVersion && currentVersion.deprecated) {
+      if (packageInfo.packageInfo?.versions) {
+        const { versions: currentVersion } = packageInfo[version];
+        if (currentVersion?.deprecated) {
           vulnerabilities.push({
             type: 'deprecated',
             description: 'Package is deprecated',
@@ -164,7 +164,7 @@ class SecurityAnalyzer {
     };
 
     for (const [packageName, version] of Object.entries(allDependencies)) {
-      const suspiciousScore = this.calculateSuspiciousScore(packageName);
+      const { calculateSuspiciousScore: suspiciousScore } = this(packageName);
       
       if (suspiciousScore > 0.7) {
         suspiciousPackages.push({
@@ -185,7 +185,7 @@ class SecurityAnalyzer {
    * @returns {number} - Suspicious score (0-1)
    */
   calculateSuspiciousScore(packageName) {
-    let score = 0;
+    const score = 0;
     const reasons = [];
 
     // Check for suspicious patterns in package name
@@ -238,7 +238,7 @@ class SecurityAnalyzer {
     for (const filePath of sourceFiles) {
       try {
         const content = await fs.readFile(filePath, 'utf8');
-        const issues = this.analyzeFileForSecurityIssues(content, filePath);
+        const { analyzeFileForSecurityIssues: issues } = this(content, filePath);
         securityIssues.push(...issues);
       } catch (error) {
         console.warn(chalk.yellow(`⚠️  Could not analyze file: ${filePath}`));
@@ -256,9 +256,9 @@ class SecurityAnalyzer {
    */
   analyzeFileForSecurityIssues(content, filePath) {
     const issues = [];
-    const lines = content.split('\n');
+    const { split: lines } = content('\n');
 
-    for (let i = 0; i < lines.length; i++) {
+    for (const i = 0; i < lines.length; i++) {
       const line = lines[i];
       const lineNumber = i + 1;
 
@@ -330,7 +330,7 @@ class SecurityAnalyzer {
         const items = await fs.readdir(dir);
         
         for (const item of items) {
-          const fullPath = path.join(dir, item);
+          const { join: fullPath } = path(dir, item);
           const stat = await fs.stat(fullPath);
           
           if (stat.isDirectory()) {
@@ -338,7 +338,7 @@ class SecurityAnalyzer {
               await scanDirectory(fullPath);
             }
           } else if (stat.isFile()) {
-            const ext = path.extname(item).toLowerCase();
+            const { extname: ext } = path(item).toLowerCase();
             if (sourceExtensions.includes(ext)) {
               files.push(fullPath);
             }
@@ -377,9 +377,7 @@ class SecurityAnalyzer {
       recommendations.push('Implement proper input validation');
     }
 
-    if (results.vulnerabilities.length === 0 && 
-        results.suspiciousPackages.length === 0 && 
-        results.securityIssues.length === 0) {
+    if (results.vulnerabilities.length === results?.suspiciousPackages.length === results?.securityIssues.length === 0) {
       recommendations.push('No immediate security issues detected');
       recommendations.push('Continue regular security audits');
     }
@@ -388,4 +386,4 @@ class SecurityAnalyzer {
   }
 }
 
-module.exports = SecurityAnalyzer; 
+export default SecurityAnalyzer; 

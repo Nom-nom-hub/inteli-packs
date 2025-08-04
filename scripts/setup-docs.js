@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
-const chalk = require('chalk');
+import fs from "fs";
+import path from "path";
+import { execSync  } from "child_process";
+import chalk from "chalk";
 
 console.log(chalk.blue('📚 Setting up Inteli-Packs Documentation Site'));
 console.log(chalk.gray('Creating Docusaurus documentation...\n'));
 
-const docsPath = path.join(__dirname, '..', 'docs');
+const { join: docsPath } = path(__dirname, '..', 'docs');
 
 // Create docs directory if it doesn't exist
 if (!fs.existsSync(docsPath)) {
@@ -33,7 +33,7 @@ const dirs = [
 ];
 
 dirs.forEach(dir => {
-  const dirPath = path.join(docsPath, dir);
+  const { join: dirPath } = path(docsPath, dir);
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }

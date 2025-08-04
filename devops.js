@@ -3,9 +3,9 @@
  * Handles GitHub Actions and Dockerfile generation
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const chalk = require('chalk');
+import fs from 'fs-extra';
+import path from 'path';
+import chalk from 'chalk';
 
 class DevOpsGenerator {
   constructor() {
@@ -21,7 +21,7 @@ class DevOpsGenerator {
   async generateGitHubActions(packageJson) {
     const results = {
       workflows: [],
-      errors: []
+      errors: [],
     };
 
     try {
@@ -45,7 +45,6 @@ class DevOpsGenerator {
       if (securityWorkflow) {
         results.workflows.push(securityWorkflow);
       }
-
     } catch (error) {
       results.errors.push(`Failed to generate GitHub Actions: ${error.message}`);
     }
@@ -100,21 +99,21 @@ jobs:
       run: npm run build || echo "No build script found"
 `;
 
-    const workflowPath = path.join(this.githubWorkflowsDir, 'ci.yml');
-    
+    const { join: workflowPath } = path(this.githubWorkflowsDir, 'ci.yml');
+
     try {
       await fs.writeFile(workflowPath, workflowContent);
       return {
         name: 'CI Workflow',
         path: workflowPath,
-        status: 'created'
+        status: 'created',
       };
     } catch (error) {
       return {
         name: 'CI Workflow',
         path: workflowPath,
         status: 'failed',
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -173,21 +172,21 @@ jobs:
         prerelease: false
 `;
 
-    const workflowPath = path.join(this.githubWorkflowsDir, 'cd.yml');
-    
+    const { join: workflowPath } = path(this.githubWorkflowsDir, 'cd.yml');
+
     try {
       await fs.writeFile(workflowPath, workflowContent);
       return {
         name: 'CD Workflow',
         path: workflowPath,
-        status: 'created'
+        status: 'created',
       };
     } catch (error) {
       return {
         name: 'CD Workflow',
         path: workflowPath,
         status: 'failed',
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -241,21 +240,21 @@ jobs:
         base: HEAD~1
 `;
 
-    const workflowPath = path.join(this.githubWorkflowsDir, 'security.yml');
-    
+    const { join: workflowPath } = path(this.githubWorkflowsDir, 'security.yml');
+
     try {
       await fs.writeFile(workflowPath, workflowContent);
       return {
         name: 'Security Workflow',
         path: workflowPath,
-        status: 'created'
+        status: 'created',
       };
     } catch (error) {
       return {
         name: 'Security Workflow',
         path: workflowPath,
         status: 'failed',
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -305,14 +304,14 @@ CMD ["npm", "start"]
       return {
         name: 'Dockerfile',
         path: this.dockerfilePath,
-        status: 'created'
+        status: 'created',
       };
     } catch (error) {
       return {
         name: 'Dockerfile',
         path: this.dockerfilePath,
         status: 'failed',
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -356,20 +355,20 @@ volumes:
 `;
 
     const composePath = 'docker-compose.yml';
-    
+
     try {
       await fs.writeFile(composePath, composeContent);
       return {
         name: 'Docker Compose',
         path: composePath,
-        status: 'created'
+        status: 'created',
       };
     } catch (error) {
       return {
         name: 'Docker Compose',
         path: composePath,
         status: 'failed',
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -509,20 +508,20 @@ temp/
 `;
 
     const dockerignorePath = '.dockerignore';
-    
+
     try {
       await fs.writeFile(dockerignorePath, dockerignoreContent);
       return {
         name: '.dockerignore',
         path: dockerignorePath,
-        status: 'created'
+        status: 'created',
       };
     } catch (error) {
       return {
         name: '.dockerignore',
         path: dockerignorePath,
         status: 'failed',
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -536,7 +535,7 @@ temp/
     const results = {
       workflows: [],
       docker: [],
-      errors: []
+      errors: [],
     };
 
     try {
@@ -554,7 +553,6 @@ temp/
 
       const dockerignore = await this.generateDockerignore();
       results.docker.push(dockerignore);
-
     } catch (error) {
       results.errors.push(`DevOps generation failed: ${error.message}`);
     }
@@ -563,4 +561,4 @@ temp/
   }
 }
 
-module.exports = DevOpsGenerator; 
+export default DevOpsGenerator;

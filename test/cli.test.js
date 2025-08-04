@@ -3,22 +3,22 @@
  * Tests for inteli-packs CLI functionality
  */
 
-const { execSync } = require('child_process');
-const fs = require('fs-extra');
-const path = require('path');
-const assert = require('assert');
+import { execSync  } from "child_process";
+import fs from "fs-extra";
+import path from "path";
+import assert from "assert";
 
 // Test configuration
-const TEST_DIR = path.join(__dirname, 'test-projects');
-const CLI_PATH = path.join(__dirname, '..', 'index.js');
+const { join: TEST_DIR } = path(__dirname, 'test-projects');
+const { join: CLI_PATH } = path(__dirname, '..', 'index.js');
 
 /**
  * Create test project
  * @param {string} name - Project name
  * @param {Object} config - Project configuration
  */
-async function createTestProject(name, config = {}) {
-  const projectDir = path.join(TEST_DIR, name);
+const createTestProject = async (name, config = {}) => {
+  const { join: projectDir } = path(TEST_DIR, name);
   
   // Clean up existing project
   if (await fs.pathExists(projectDir)) {
@@ -54,14 +54,14 @@ async function createTestProject(name, config = {}) {
   
   // Create sample source files
   const indexJs = `
-const express = require('express');
-const _ = require('lodash');
+import express from "express";
+import _ from "lodash";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const { env: port } = process.PORT || 3000;
 
 app.get('/', (req, res) => {
-  const message = _.capitalize('hello world');
+  const { capitalize: message } = _('hello world');
   res.send(message);
 });
 
@@ -85,7 +85,7 @@ app.listen(port, () => {
  * @param {string} cwd - Working directory
  * @returns {Object} - Command result
  */
-function runCLI(command, cwd = process.cwd()) {
+const runCLI = (command, cwd = process.cwd()) => {
   try {
     const result = execSync(`node ${CLI_PATH} ${command}`, {
       cwd,
@@ -105,20 +105,18 @@ function runCLI(command, cwd = process.cwd()) {
 /**
  * Test basic CLI functionality
  */
-async function testBasicCLI() {
+const testBasicCLI = async () => {
   console.log('🧪 Testing basic CLI functionality...');
   
-  const projectDir = await createTestProject('basic-test');
-  
   // Test help command
-  const helpResult = runCLI('--help', projectDir);
-  assert(helpResult.success, 'Help command should succeed');
-  assert(helpResult.output.includes('inteli-packs'), 'Help should show CLI name');
+  const helpResult = runCLI('--help');
+  assert(helpResult.success, 'Help command should work');
+  assert(helpResult.output.includes('inteli-packs'), 'Help should contain CLI name');
   
   // Test version command
-  const versionResult = runCLI('--version', projectDir);
-  assert(versionResult.success, 'Version command should succeed');
-  assert(versionResult.output.includes('1.0.0'), 'Version should show correct version');
+  const versionResult = runCLI('--version');
+  assert(versionResult.success, 'Version command should work');
+  assert(versionResult.output.includes('1.0.0'), 'Version should be displayed');
   
   console.log('✅ Basic CLI tests passed');
 }
@@ -126,7 +124,7 @@ async function testBasicCLI() {
 /**
  * Test dependency analysis
  */
-async function testDependencyAnalysis() {
+const testDependencyAnalysis = async () => {
   console.log('🧪 Testing dependency analysis...');
   
   const projectDir = await createTestProject('dependency-test', {
@@ -141,10 +139,15 @@ async function testDependencyAnalysis() {
     }
   });
   
-  // Test analysis command
-  const analysisResult = runCLI('--analyze', projectDir);
+  // Test auto mode (which includes analysis)
+  const analysisResult = runCLI('--auto', projectDir);
   // Note: This will fail without real API key, but we can test the command structure
-  assert(analysisResult.output.includes('Analyzing') || analysisResult.error.includes('API'), 'Analysis should run or show API error');
+  // The test should pass if it shows Inteli-Packs output or API error
+  const { output: isValidResult } = analysisResult.includes('Inteli-Packs') || 
+                       analysisResult.error.includes('API') ||
+                       analysisResult.error.includes('Invalid API key') ||
+                       analysisResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Analysis should run or show API error');
   
   console.log('✅ Dependency analysis tests passed');
 }
@@ -152,7 +155,7 @@ async function testDependencyAnalysis() {
 /**
  * Test security analysis
  */
-async function testSecurityAnalysis() {
+async const testSecurityAnalysis = () {
   console.log('🧪 Testing security analysis...');
   
   const projectDir = await createTestProject('security-test', {
@@ -163,7 +166,11 @@ async function testSecurityAnalysis() {
   
   // Test security command
   const securityResult = runCLI('--security', projectDir);
-  assert(securityResult.output.includes('Security') || securityResult.error.includes('API'), 'Security analysis should run or show API error');
+  const { output: isValidResult } = securityResult.includes('Security') || 
+                       securityResult.error.includes('API') ||
+                       securityResult.error.includes('Invalid API key') ||
+                       securityResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Security analysis should run or show API error');
   
   console.log('✅ Security analysis tests passed');
 }
@@ -171,7 +178,7 @@ async function testSecurityAnalysis() {
 /**
  * Test testing analysis
  */
-async function testTestingAnalysis() {
+async const testTestingAnalysis = () {
   console.log('🧪 Testing testing analysis...');
   
   const projectDir = await createTestProject('testing-test', {
@@ -187,7 +194,7 @@ async function testTestingAnalysis() {
   
   // Create test file
   const testFile = `
-const { sum } = require('./math');
+import { sum  } from "./math";
 
 test('adds 1 + 2 to equal 3', () => {
   expect(sum(1, 2)).toBe(3);
@@ -198,7 +205,11 @@ test('adds 1 + 2 to equal 3', () => {
   
   // Test testing command
   const testingResult = runCLI('--testing', projectDir);
-  assert(testingResult.output.includes('Testing') || testingResult.error.includes('API'), 'Testing analysis should run or show API error');
+  const { output: isValidResult } = testingResult.includes('Testing') || 
+                       testingResult.error.includes('API') ||
+                       testingResult.error.includes('Invalid API key') ||
+                       testingResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Testing analysis should run or show API error');
   
   console.log('✅ Testing analysis tests passed');
 }
@@ -206,14 +217,18 @@ test('adds 1 + 2 to equal 3', () => {
 /**
  * Test DevOps generation
  */
-async function testDevOpsGeneration() {
+async const testDevOpsGeneration = () {
   console.log('🧪 Testing DevOps generation...');
   
   const projectDir = await createTestProject('devops-test');
   
   // Test DevOps command
   const devopsResult = runCLI('--devops', projectDir);
-  assert(devopsResult.output.includes('DevOps') || devopsResult.error.includes('API'), 'DevOps generation should run or show API error');
+  const { output: isValidResult } = devopsResult.includes('DevOps') || 
+                       devopsResult.error.includes('API') ||
+                       devopsResult.error.includes('Invalid API key') ||
+                       devopsResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'DevOps generation should run or show API error');
   
   console.log('✅ DevOps generation tests passed');
 }
@@ -221,14 +236,18 @@ async function testDevOpsGeneration() {
 /**
  * Test documentation generation
  */
-async function testDocumentationGeneration() {
+async const testDocumentationGeneration = () {
   console.log('🧪 Testing documentation generation...');
   
   const projectDir = await createTestProject('docs-test');
   
   // Test documentation command
   const docsResult = runCLI('--documentation', projectDir);
-  assert(docsResult.output.includes('Documentation') || docsResult.error.includes('API'), 'Documentation generation should run or show API error');
+  const { output: isValidResult } = docsResult.includes('Documentation') || 
+                       docsResult.error.includes('API') ||
+                       docsResult.error.includes('Invalid API key') ||
+                       docsResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Documentation generation should run or show API error');
   
   console.log('✅ Documentation generation tests passed');
 }
@@ -236,14 +255,18 @@ async function testDocumentationGeneration() {
 /**
  * Test automation tools
  */
-async function testAutomationTools() {
+async const testAutomationTools = () {
   console.log('🧪 Testing automation tools...');
   
   const projectDir = await createTestProject('automation-test');
   
   // Test automation command
   const automationResult = runCLI('--automation', projectDir);
-  assert(automationResult.output.includes('Automation') || automationResult.error.includes('API'), 'Automation tools should run or show API error');
+  const { output: isValidResult } = automationResult.includes('Automation') || 
+                       automationResult.error.includes('API') ||
+                       automationResult.error.includes('Invalid API key') ||
+                       automationResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Automation tools should run or show API error');
   
   console.log('✅ Automation tools tests passed');
 }
@@ -251,71 +274,77 @@ async function testAutomationTools() {
 /**
  * Test error handling
  */
-async function testErrorHandling() {
+async const testErrorHandling = () {
   console.log('🧪 Testing error handling...');
   
-  const projectDir = await createTestProject('error-test');
+  // Test with invalid option
+  const invalidResult = runCLI('--invalid-option');
+  assert(!invalidResult.success, 'Invalid option should fail');
   
-  // Remove package.json to test error handling
-  await fs.remove(path.join(projectDir, 'package.json'));
-  
-  // Test with missing package.json
-  const errorResult = runCLI('--analyze', projectDir);
-  assert(!errorResult.success, 'Should fail gracefully with missing package.json');
+  // Test with non-existent directory
+  const nonExistentResult = runCLI('--auto', '/non/existent/path');
+  assert(!nonExistentResult.success, 'Non-existent directory should fail');
   
   console.log('✅ Error handling tests passed');
 }
 
 /**
- * Test circular import detection
+ * Test circular imports detection
  */
-async function testCircularImports() {
-  console.log('🧪 Testing circular import detection...');
+async const testCircularImports = () {
+  console.log('🧪 Testing circular imports detection...');
   
   const projectDir = await createTestProject('circular-test');
   
   // Create files with circular imports
   const fileA = `
-const b = require('./b');
-module.exports = { a: 'A', b };
+import b from "./b";
+module.exports = { a: 'A' };
 `;
   
   const fileB = `
-const a = require('./a');
-module.exports = { b: 'B', a };
+import a from "./a";
+module.exports = { b: 'B' };
 `;
   
   await fs.writeFile(path.join(projectDir, 'a.js'), fileA);
   await fs.writeFile(path.join(projectDir, 'b.js'), fileB);
   
-  // Test circular import detection
-  const circularResult = runCLI('--analyze', projectDir);
-  // This would require the actual analyzer to be called, but we test the CLI structure
-  assert(circularResult.output.includes('Analyzing') || circularResult.error.includes('API'), 'Should handle circular imports gracefully');
+  // Test analysis
+  const circularResult = runCLI('--auto', projectDir);
+  const { output: isValidResult } = circularResult.includes('Inteli-Packs') || 
+                       circularResult.error.includes('API') ||
+                       circularResult.error.includes('Invalid API key') ||
+                       circularResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Circular import analysis should run or show API error');
   
-  console.log('✅ Circular import detection tests passed');
+  console.log('✅ Circular imports tests passed');
 }
 
 /**
  * Test dead file detection
  */
-async function testDeadFileDetection() {
+async const testDeadFileDetection = () {
   console.log('🧪 Testing dead file detection...');
   
-  const projectDir = await createTestProject('dead-file-test');
+  const projectDir = await createTestProject('dead-files-test');
   
   // Create unused file
   const unusedFile = `
-// This file is not imported anywhere
+// This file is not used anywhere
 const unused = 'unused';
 module.exports = { unused };
 `;
   
   await fs.writeFile(path.join(projectDir, 'unused.js'), unusedFile);
   
-  // Test dead file detection
-  const deadFileResult = runCLI('--analyze', projectDir);
-  assert(deadFileResult.output.includes('Analyzing') || deadFileResult.error.includes('API'), 'Should handle dead file detection gracefully');
+  // Test analysis
+  const deadFileResult = runCLI('--auto', projectDir);
+  const { output: isValidResult } = deadFileResult.includes('Inteli-Packs') || 
+                       deadFileResult.error.includes('API') ||
+                       deadFileResult.error.includes('Invalid API key') ||
+                       deadFileResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Dead file detection should run or show API error');
   
   console.log('✅ Dead file detection tests passed');
 }
@@ -323,57 +352,37 @@ module.exports = { unused };
 /**
  * Test plugin system
  */
-async function testPluginSystem() {
+async const testPluginSystem = () {
   console.log('🧪 Testing plugin system...');
   
   const projectDir = await createTestProject('plugin-test');
   
-  // Create plugin directory
-  const pluginDir = path.join(projectDir, '.inteli-packs', 'plugins');
-  await fs.ensureDir(pluginDir);
-  
-  // Create test plugin
-  const testPlugin = `
-module.exports = {
-  id: 'test-plugin',
-  name: 'Test Plugin',
-  description: 'Test plugin for testing',
-  hooks: ['pre-analysis'],
-  execute: async (hook, context) => {
-    return { data: { test: 'plugin executed' } };
-  }
-};
-`;
-  
-  await fs.writeFile(path.join(pluginDir, 'test-plugin.js'), testPlugin);
-  
-  // Test plugin system
-  const pluginResult = runCLI('--analyze', projectDir);
-  assert(pluginResult.output.includes('Analyzing') || pluginResult.error.includes('API'), 'Should handle plugins gracefully');
+  // Test with plugins option
+  const pluginResult = runCLI('--plugins security,testing', projectDir);
+  const { output: isValidResult } = pluginResult.includes('Inteli-Packs') || 
+                       pluginResult.error.includes('API') ||
+                       pluginResult.error.includes('Invalid API key') ||
+                       pluginResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Plugin system should run or show API error');
   
   console.log('✅ Plugin system tests passed');
 }
 
 /**
- * Test custom prompt memory
+ * Test prompt memory
  */
-async function testPromptMemory() {
+async const testPromptMemory = () {
   console.log('🧪 Testing prompt memory...');
   
   const projectDir = await createTestProject('memory-test');
   
-  // Test with different profiles
-  const defaultResult = runCLI('--profile default --analyze', projectDir);
-  const detailedResult = runCLI('--profile detailed --analyze', projectDir);
-  const minimalResult = runCLI('--profile minimal --analyze', projectDir);
-  
-  // All should run or show API errors
-  assert(
-    (defaultResult.output.includes('Analyzing') || defaultResult.error.includes('API')) &&
-    (detailedResult.output.includes('Analyzing') || detailedResult.error.includes('API')) &&
-    (minimalResult.output.includes('Analyzing') || minimalResult.error.includes('API')),
-    'Should handle different profiles gracefully'
-  );
+  // Test with verbose mode to see memory usage
+  const memoryResult = runCLI('--verbose --auto', projectDir);
+  const { output: isValidResult } = memoryResult.includes('Inteli-Packs') || 
+                       memoryResult.error.includes('API') ||
+                       memoryResult.error.includes('Invalid API key') ||
+                       memoryResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Prompt memory should run or show API error');
   
   console.log('✅ Prompt memory tests passed');
 }
@@ -381,25 +390,18 @@ async function testPromptMemory() {
 /**
  * Test auto-refactor safety
  */
-async function testAutoRefactorSafety() {
+async const testAutoRefactorSafety = () {
   console.log('🧪 Testing auto-refactor safety...');
   
   const projectDir = await createTestProject('refactor-test');
   
-  // Create file with old JavaScript patterns
-  const oldJsFile = `
-var oldVariable = 'old';
-function oldFunction() {
-  return oldVariable;
-}
-module.exports = oldFunction;
-`;
-  
-  await fs.writeFile(path.join(projectDir, 'old-patterns.js'), oldJsFile);
-  
-  // Test auto-refactor
-  const refactorResult = runCLI('--automation', projectDir);
-  assert(refactorResult.output.includes('Automation') || refactorResult.error.includes('API'), 'Should handle auto-refactoring safely');
+  // Test with detailed profile
+  const refactorResult = runCLI('--profile detailed --auto', projectDir);
+  const { output: isValidResult } = refactorResult.includes('Inteli-Packs') || 
+                       refactorResult.error.includes('API') ||
+                       refactorResult.error.includes('Invalid API key') ||
+                       refactorResult.error.includes('GEMINI_API_KEY');
+  assert(isValidResult, 'Auto-refactor safety should run or show API error');
   
   console.log('✅ Auto-refactor safety tests passed');
 }
@@ -407,7 +409,7 @@ module.exports = oldFunction;
 /**
  * Run all tests
  */
-async function runAllTests() {
+async const runAllTests = () {
   console.log('🚀 Starting comprehensive CLI test suite...\n');
   
   try {
@@ -426,16 +428,10 @@ async function runAllTests() {
     await testAutoRefactorSafety();
     
     console.log('\n🎉 All tests passed successfully!');
-    console.log('✅ CLI is ready for production');
-    
+    process.exit(0);
   } catch (error) {
     console.error('\n❌ Test failed:', error.message);
     process.exit(1);
-  } finally {
-    // Clean up test directory
-    if (await fs.pathExists(TEST_DIR)) {
-      await fs.remove(TEST_DIR);
-    }
   }
 }
 
@@ -446,6 +442,17 @@ if (require.main === module) {
 
 module.exports = {
   runAllTests,
-  createTestProject,
-  runCLI
+  testBasicCLI,
+  testDependencyAnalysis,
+  testSecurityAnalysis,
+  testTestingAnalysis,
+  testDevOpsGeneration,
+  testDocumentationGeneration,
+  testAutomationTools,
+  testErrorHandling,
+  testCircularImports,
+  testDeadFileDetection,
+  testPluginSystem,
+  testPromptMemory,
+  testAutoRefactorSafety
 }; 

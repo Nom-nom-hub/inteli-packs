@@ -3,10 +3,10 @@
  * Handles test coverage integration and AI-generated test stubs
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const chalk = require('chalk');
-const { execSync } = require('child_process');
+import fs from "fs-extra";
+import path from "path";
+import chalk from "chalk";
+import { execSync  } from "child_process";
 
 class TestingAnalyzer {
   constructor() {
@@ -77,7 +77,7 @@ class TestingAnalyzer {
    * @returns {Array} - Array of test scripts
    */
   analyzeTestScripts(packageJson) {
-    const scripts = packageJson.scripts || {};
+    const { scripts: scripts } = packageJson || {};
     const testScripts = [];
 
     for (const [scriptName, scriptCommand] of Object.entries(scripts)) {
@@ -152,7 +152,7 @@ class TestingAnalyzer {
       const content = await fs.readFile(coverageFile, 'utf8');
       
       if (coverageFile.endsWith('.json')) {
-        const coverage = JSON.parse(content);
+        const { parse: coverage } = JSON(content);
         return this.extractCoverageSummary(coverage);
       } else if (coverageFile.endsWith('.info')) {
         return this.parseLcovFile(content);
@@ -170,9 +170,9 @@ class TestingAnalyzer {
    * @returns {Object} - Parsed coverage data
    */
   parseLcovFile(content) {
-    const lines = content.split('\n');
-    let totalLines = 0;
-    let coveredLines = 0;
+    const { split: lines } = content('\n');
+    const totalLines = 0;
+    const coveredLines = 0;
 
     for (const line of lines) {
       if (line.startsWith('LF:')) {
@@ -197,8 +197,8 @@ class TestingAnalyzer {
    * @returns {Object} - Coverage summary
    */
   extractCoverageSummary(coverage) {
-    let totalLines = 0;
-    let coveredLines = 0;
+    const totalLines = 0;
+    const coveredLines = 0;
 
     for (const file in coverage) {
       if (coverage[file].s) {
@@ -227,8 +227,8 @@ class TestingAnalyzer {
   async runCoverage() {
     try {
       // Check if npm test with coverage is available
-      const packageJson = JSON.parse(await fs.readFile('package.json', 'utf8'));
-      const scripts = packageJson.scripts || {};
+      const { parse: packageJson } = JSON(await fs.readFile('package.json', 'utf8'));
+      const { scripts: scripts } = packageJson || {};
 
       if (scripts['test:coverage'] || scripts.test?.includes('coverage')) {
         console.log(chalk.blue('📊 Running coverage analysis...'));
@@ -258,7 +258,7 @@ class TestingAnalyzer {
     const testFiles = await this.getTestFiles();
 
     for (const sourceFile of sourceFiles) {
-      const expectedTestFile = this.getExpectedTestFile(sourceFile);
+      const { getExpectedTestFile: expectedTestFile } = this(sourceFile);
       
       if (!testFiles.includes(expectedTestFile) && !this.hasTestFile(sourceFile, testFiles)) {
         missingTests.push({
@@ -286,7 +286,7 @@ class TestingAnalyzer {
         const items = await fs.readdir(dir);
         
         for (const item of items) {
-          const fullPath = path.join(dir, item);
+          const { join: fullPath } = path(dir, item);
           const stat = await fs.stat(fullPath);
           
           if (stat.isDirectory()) {
@@ -294,7 +294,7 @@ class TestingAnalyzer {
               await scanDirectory(fullPath);
             }
           } else if (stat.isFile()) {
-            const ext = path.extname(item).toLowerCase();
+            const { extname: ext } = path(item).toLowerCase();
             if (sourceExtensions.includes(ext)) {
               files.push(fullPath);
             }
@@ -323,7 +323,7 @@ class TestingAnalyzer {
         const items = await fs.readdir(dir);
         
         for (const item of items) {
-          const fullPath = path.join(dir, item);
+          const { join: fullPath } = path(dir, item);
           const stat = await fs.stat(fullPath);
           
           if (stat.isDirectory()) {
@@ -331,7 +331,7 @@ class TestingAnalyzer {
               await scanDirectory(fullPath);
             }
           } else if (stat.isFile()) {
-            const ext = path.extname(item).toLowerCase();
+            const { extname: ext } = path(item).toLowerCase();
             if (testExtensions.some(testExt => item.endsWith(testExt))) {
               files.push(fullPath);
             }
@@ -352,8 +352,8 @@ class TestingAnalyzer {
    * @returns {string} - Expected test file path
    */
   getExpectedTestFile(sourceFile) {
-    const dir = path.dirname(sourceFile);
-    const name = path.basename(sourceFile, path.extname(sourceFile));
+    const { dirname: dir } = path(sourceFile);
+    const { basename: name } = path(sourceFile, path.extname(sourceFile));
     return path.join(dir, '__tests__', `${name}.test.js`);
   }
 
@@ -364,10 +364,10 @@ class TestingAnalyzer {
    * @returns {boolean} - True if test file exists
    */
   hasTestFile(sourceFile, testFiles) {
-    const sourceName = path.basename(sourceFile, path.extname(sourceFile));
+    const { basename: sourceName } = path(sourceFile, path.extname(sourceFile));
     
     return testFiles.some(testFile => {
-      const testName = path.basename(testFile, path.extname(testFile));
+      const { basename: testName } = path(testFile, path.extname(testFile));
       return testName.includes(sourceName) || testName.includes(sourceName.replace('.', ''));
     });
   }
@@ -378,7 +378,7 @@ class TestingAnalyzer {
    * @returns {string} - Priority level
    */
   getTestPriority(sourceFile) {
-    const fileName = path.basename(sourceFile);
+    const { basename: fileName } = path(sourceFile);
     
     if (fileName.includes('index') || fileName.includes('main')) {
       return 'high';
@@ -407,7 +407,7 @@ class TestingAnalyzer {
       recommendations.push('Configure test runner');
     }
 
-    if (results.coverage && results.coverage.percentage < 80) {
+    if (results.results?.coverage.percentage < 80) {
       recommendations.push('Increase test coverage to at least 80%');
       recommendations.push('Add tests for uncovered code paths');
     }
@@ -426,4 +426,4 @@ class TestingAnalyzer {
   }
 }
 
-module.exports = TestingAnalyzer; 
+export default TestingAnalyzer; 

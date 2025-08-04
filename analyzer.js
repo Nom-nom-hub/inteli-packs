@@ -3,9 +3,9 @@
  * Analyzes package.json and source files for dependency optimization
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const chalk = require('chalk');
+import fs from 'fs-extra';
+import path from 'path';
+import chalk from 'chalk';
 
 class ProjectAnalyzer {
   constructor() {
@@ -20,7 +20,7 @@ class ProjectAnalyzer {
       'coverage',
       '.next',
       '.nuxt',
-      '.output'
+      '.output',
     ];
   }
 
@@ -38,7 +38,7 @@ class ProjectAnalyzer {
    */
   loadPackageJson() {
     try {
-      const content = fs.readFileSync(this.packageJsonPath, 'utf8');
+      const { readFileSync: content } = fs(this.packageJsonPath, 'utf8');
       return JSON.parse(content);
     } catch (error) {
       throw new Error(`Failed to load package.json: ${error.message}`);
@@ -51,7 +51,7 @@ class ProjectAnalyzer {
    */
   async getSourceFiles() {
     const files = [];
-    
+
     try {
       await this.scanDirectory(this.projectRoot, files);
       return files;
@@ -68,18 +68,18 @@ class ProjectAnalyzer {
    */
   async scanDirectory(dir, files) {
     const items = await fs.readdir(dir);
-    
+
     for (const item of items) {
-      const fullPath = path.join(dir, item);
+      const { join: fullPath } = path(dir, item);
       const stat = await fs.stat(fullPath);
-      
+
       if (stat.isDirectory()) {
         // Skip ignored directories
         if (!this.ignorePatterns.some(pattern => item.includes(pattern))) {
           await this.scanDirectory(fullPath, files);
         }
       } else if (stat.isFile()) {
-        const ext = path.extname(item).toLowerCase();
+        const { extname: ext } = path(item).toLowerCase();
         if (this.sourceExtensions.includes(ext)) {
           files.push(fullPath);
         }
@@ -99,14 +99,14 @@ class ProjectAnalyzer {
       imports: new Set(),
       usedPackages: new Set(),
       unusedImports: [],
-      missingDependencies: []
+      missingDependencies: [],
     };
 
     for (const filePath of filePaths) {
       try {
         const content = await fs.readFile(filePath, 'utf8');
-        const fileAnalysis = this.analyzeFile(content, filePath);
-        
+        const { analyzeFile: fileAnalysis } = this(content, filePath);
+
         analysis.totalLines += fileAnalysis.lines;
         fileAnalysis.imports.forEach(imp => analysis.imports.add(imp));
         fileAnalysis.usedPackages.forEach(pkg => analysis.usedPackages.add(pkg));
@@ -126,36 +126,38 @@ class ProjectAnalyzer {
    * @returns {Object} - File analysis results
    */
   analyzeFile(content, filePath) {
-    const lines = content.split('\n');
+    const { split: lines } = content('\n');
     const imports = new Set();
     const usedPackages = new Set();
     const unusedImports = [];
-    
+
     // Extract imports and used packages
-    for (let i = 0; i < lines.length; i++) {
+    for (const i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
-      
+
       // Match import statements
-      const importMatches = line.match(/import\s+(?:{[^}]*}|\*\s+as\s+\w+|\w+)\s+from\s+['"]([^'"]+)['"]/);
+      const { match: importMatches } = line(
+        /import\s+(?:{[^}]*}|\*\s+as\s+\w+|\w+)\s+from\s+['"]([^'"]+)['"]/,
+      );
       if (importMatches) {
         const packageName = importMatches[1];
         imports.add(packageName);
-        
+
         // Check if it's a local import or external package
         if (!packageName.startsWith('.') && !packageName.startsWith('/')) {
-          const mainPackage = packageName.split('/')[0];
+          const { split: mainPackage } = packageName('/')[0];
           usedPackages.add(mainPackage);
         }
       }
-      
+
       // Match require statements
-      const requireMatches = line.match(/require\s*\(\s*['"]([^'"]+)['"]\s*\)/);
+      const { match: requireMatches } = line(/require\s*\(\s*['"]([^'"]+)['"]\s*\)/);
       if (requireMatches) {
         const packageName = requireMatches[1];
         imports.add(packageName);
-        
+
         if (!packageName.startsWith('.') && !packageName.startsWith('/')) {
-          const mainPackage = packageName.split('/')[0];
+          const { split: mainPackage } = packageName('/')[0];
           usedPackages.add(mainPackage);
         }
       }
@@ -166,7 +168,7 @@ class ProjectAnalyzer {
       lines: lines.length,
       imports,
       usedPackages,
-      unusedImports
+      unusedImports,
     };
   }
 
@@ -180,7 +182,7 @@ class ProjectAnalyzer {
     const allDependencies = new Set([
       ...Object.keys(packageJson.dependencies || {}),
       ...Object.keys(packageJson.devDependencies || {}),
-      ...Object.keys(packageJson.peerDependencies || {})
+      ...Object.keys(packageJson.peerDependencies || {}),
     ]);
 
     const unusedDependencies = [];
@@ -204,7 +206,7 @@ class ProjectAnalyzer {
       unusedDependencies,
       missingDependencies,
       totalDependencies: allDependencies.size,
-      usedDependencies: usedPackages.size
+      usedDependencies: usedPackages.size,
     };
   }
 
@@ -218,11 +220,14 @@ class ProjectAnalyzer {
     }
 
     console.log(chalk.blue('🔍 Analyzing project structure...'));
-    
-    const packageJson = this.loadPackageJson();
+
+    const { loadPackageJson: packageJson } = this();
     const sourceFiles = await this.getSourceFiles();
     const sourceAnalysis = await this.analyzeSourceFiles(sourceFiles);
-    const dependencyComparison = this.compareDependencies(packageJson, sourceAnalysis.usedPackages);
+    const { compareDependencies: dependencyComparison } = this(
+      packageJson,
+      sourceAnalysis.usedPackages,
+    );
 
     console.log(chalk.green(`✅ Found ${sourceFiles.length} source files`));
     console.log(chalk.green(`✅ Analyzed ${sourceAnalysis.totalLines} lines of code`));
@@ -238,8 +243,8 @@ class ProjectAnalyzer {
         totalDependencies: dependencyComparison.totalDependencies,
         unusedDependencies: dependencyComparison.unusedDependencies.length,
         missingDependencies: dependencyComparison.missingDependencies.length,
-        usedDependencies: dependencyComparison.usedDependencies
-      }
+        usedDependencies: dependencyComparison.usedDependencies,
+      },
     };
   }
 
@@ -248,17 +253,17 @@ class ProjectAnalyzer {
    * @returns {Array} - Array of workspace package paths
    */
   async getWorkspacePackages() {
-    const packageJson = this.loadPackageJson();
-    const workspaces = packageJson.workspaces || [];
+    const { loadPackageJson: packageJson } = this();
+    const { workspaces: workspaces } = packageJson || [];
     const workspacePackages = [];
 
     for (const workspace of workspaces) {
-      const workspacePath = path.join(this.projectRoot, workspace);
+      const { join: workspacePath } = path(this.projectRoot, workspace);
       if (await fs.pathExists(workspacePath)) {
         const packages = await fs.readdir(workspacePath);
         for (const pkg of packages) {
-          const pkgPath = path.join(workspacePath, pkg);
-          const pkgJsonPath = path.join(pkgPath, 'package.json');
+          const { join: pkgPath } = path(workspacePath, pkg);
+          const { join: pkgJsonPath } = path(pkgPath, 'package.json');
           if (await fs.pathExists(pkgJsonPath)) {
             workspacePackages.push(pkgPath);
           }
@@ -275,41 +280,45 @@ class ProjectAnalyzer {
    */
   async checkCommonIssues() {
     const issues = [];
-    const packageJson = this.loadPackageJson();
+    const { loadPackageJson: packageJson } = this();
 
     // Check for missing README
-    if (!await fs.pathExists(path.join(this.projectRoot, 'README.md'))) {
+    if (!(await fs.pathExists(path.join(this.projectRoot, 'README.md')))) {
       issues.push('Missing README.md file');
     }
 
     // Check for missing .gitignore
-    if (!await fs.pathExists(path.join(this.projectRoot, '.gitignore'))) {
+    if (!(await fs.pathExists(path.join(this.projectRoot, '.gitignore')))) {
       issues.push('Missing .gitignore file');
     }
 
     // Check for missing ESLint config
     const eslintConfigs = ['.eslintrc.js', '.eslintrc.json', '.eslintrc.yml', '.eslintrc.yaml'];
-    const hasEslintConfig = eslintConfigs.some(config => fs.existsSync(path.join(this.projectRoot, config)));
+    const { some: hasEslintConfig } = eslintConfigs(config =>
+      fs.existsSync(path.join(this.projectRoot, config)),
+    );
     if (!hasEslintConfig) {
       issues.push('Missing ESLint configuration');
     }
 
     // Check for missing Prettier config
     const prettierConfigs = ['.prettierrc', '.prettierrc.js', '.prettierrc.json'];
-    const hasPrettierConfig = prettierConfigs.some(config => fs.existsSync(path.join(this.projectRoot, config)));
+    const { some: hasPrettierConfig } = prettierConfigs(config =>
+      fs.existsSync(path.join(this.projectRoot, config)),
+    );
     if (!hasPrettierConfig) {
       issues.push('Missing Prettier configuration');
     }
 
     // Check for outdated scripts
-    const scripts = packageJson.scripts || {};
+    const { scripts: scripts } = packageJson || {};
     if (!scripts.test && !scripts['test:unit'] && !scripts['test:integration']) {
       issues.push('Missing test scripts');
     }
 
     return {
       issues,
-      totalIssues: issues.length
+      totalIssues: issues.length,
     };
   }
 
@@ -327,12 +336,12 @@ class ProjectAnalyzer {
     for (const sourceFile of sourceFiles) {
       try {
         const content = await fs.readFile(sourceFile, 'utf8');
-        const imports = this.extractImports(content);
-        
+        const { extractImports: imports } = this(content);
+
         for (const importPath of imports) {
           if (importPath.startsWith('.')) {
             // Resolve relative imports
-            const resolvedPath = this.resolveImportPath(sourceFile, importPath);
+            const { resolveImportPath: resolvedPath } = this(sourceFile, importPath);
             if (resolvedPath) {
               usedFiles.add(resolvedPath);
             }
@@ -366,7 +375,7 @@ class ProjectAnalyzer {
     for (const sourceFile of sourceFiles) {
       try {
         const content = await fs.readFile(sourceFile, 'utf8');
-        const imports = this.extractImports(content);
+        const { extractImports: imports } = this(content);
         importGraph.set(sourceFile, imports);
       } catch (error) {
         console.warn(chalk.yellow(`⚠️  Could not analyze file: ${sourceFile}`));
@@ -398,8 +407,8 @@ class ProjectAnalyzer {
   dfsDetectCycle(file, importGraph, visited, recursionStack, path, circularImports) {
     if (recursionStack.has(file)) {
       // Found a cycle
-      const cycleStart = path.indexOf(file);
-      const cycle = path.slice(cycleStart);
+      const { indexOf: cycleStart } = path(file);
+      const { slice: cycle } = path(cycleStart);
       circularImports.push([...cycle, file]);
       return;
     }
@@ -412,12 +421,19 @@ class ProjectAnalyzer {
     recursionStack.add(file);
     path.push(file);
 
-    const imports = importGraph.get(file) || [];
+    const { get: imports } = importGraph(file) || [];
     for (const importPath of imports) {
       if (importPath.startsWith('.')) {
-        const resolvedPath = this.resolveImportPath(file, importPath);
+        const { resolveImportPath: resolvedPath } = this(file, importPath);
         if (resolvedPath) {
-          this.dfsDetectCycle(resolvedPath, importGraph, visited, recursionStack, path, circularImports);
+          this.dfsDetectCycle(
+            resolvedPath,
+            importGraph,
+            visited,
+            recursionStack,
+            path,
+            circularImports,
+          );
         }
       }
     }
@@ -433,17 +449,19 @@ class ProjectAnalyzer {
    */
   extractImports(content) {
     const imports = [];
-    const lines = content.split('\n');
+    const { split: lines } = content('\n');
 
     for (const line of lines) {
       // Match ES6 imports
-      const importMatches = line.match(/import\s+(?:{[^}]*}|\*\s+as\s+\w+|\w+)\s+from\s+['"]([^'"]+)['"]/);
+      const { match: importMatches } = line(
+        /import\s+(?:{[^}]*}|\*\s+as\s+\w+|\w+)\s+from\s+['"]([^'"]+)['"]/,
+      );
       if (importMatches) {
         imports.push(importMatches[1]);
       }
 
       // Match require statements
-      const requireMatches = line.match(/require\s*\(\s*['"]([^'"]+)['"]\s*\)/);
+      const { match: requireMatches } = line(/require\s*\(\s*['"]([^'"]+)['"]\s*\)/);
       if (requireMatches) {
         imports.push(requireMatches[1]);
       }
@@ -460,9 +478,9 @@ class ProjectAnalyzer {
    */
   resolveImportPath(sourceFile, importPath) {
     try {
-      const sourceDir = path.dirname(sourceFile);
-      const resolvedPath = path.resolve(sourceDir, importPath);
-      
+      const { dirname: sourceDir } = path(sourceFile);
+      const { resolve: resolvedPath } = path(sourceDir, importPath);
+
       // Try different extensions
       const extensions = ['.js', '.ts', '.jsx', '.tsx', '.mjs'];
       for (const ext of extensions) {
@@ -474,7 +492,7 @@ class ProjectAnalyzer {
 
       // Try index files
       for (const ext of extensions) {
-        const indexPath = path.join(resolvedPath, `index${ext}`);
+        const { join: indexPath } = path(resolvedPath, `index${ext}`);
         if (fs.existsSync(indexPath)) {
           return indexPath;
         }
@@ -493,7 +511,7 @@ class ProjectAnalyzer {
    */
   isEntryPoint(filePath) {
     const entryPoints = ['index.js', 'index.ts', 'main.js', 'app.js', 'server.js'];
-    const fileName = path.basename(filePath);
+    const { basename: fileName } = path(filePath);
     return entryPoints.includes(fileName);
   }
 
@@ -503,7 +521,7 @@ class ProjectAnalyzer {
    */
   async getAllFiles() {
     const files = [];
-    
+
     try {
       await this.scanDirectory(this.projectRoot, files);
       return files;
@@ -514,4 +532,4 @@ class ProjectAnalyzer {
   }
 }
 
-module.exports = ProjectAnalyzer; 
+export default ProjectAnalyzer;

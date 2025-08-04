@@ -3,19 +3,19 @@
  * Handles auto-refactoring, changelog generation, and ESM migration
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const chalk = require('chalk');
-const { execSync } = require('child_process');
+import fs from 'fs-extra';
+import path from 'path';
+import chalk from 'chalk';
+import { execSync } from 'child_process';
 
 class AutomationEngine {
   constructor() {
     this.refactoringPatterns = {
-      'var to const/let': /var\s+(\w+)/g,
+      'const to const/let': /var\s+(\w+)/g,
       'function to arrow': /function\s+(\w+)\s*\(/g,
       'template literals': /['"]\s*\+\s*['"]/g,
-      'destructuring': /const\s+(\w+)\s*=\s*(\w+)\.(\w+)/g,
-      'optional chaining': /(\w+)\s*&&\s*(\w+)\.(\w+)/g
+      destructuring: /const\s+(\w+)\s*=\s*(\w+)\.(\w+)/g,
+      'optional chaining': /(\w+)\s*&&\s*(\w+)\.(\w+)/g,
     };
   }
 
@@ -28,23 +28,23 @@ class AutomationEngine {
     const results = {
       file: filePath,
       changes: [],
-      errors: []
+      errors: [],
     };
 
     try {
       const content = await fs.readFile(filePath, 'utf8');
-      let newContent = content;
-      let changeCount = 0;
+      const newContent = content;
+      const changeCount = 0;
 
       // Apply refactoring patterns
       for (const [patternName, pattern] of Object.entries(this.refactoringPatterns)) {
-        const matches = content.match(pattern);
+        const { match: matches } = content(pattern);
         if (matches) {
           newContent = this.applyRefactoringPattern(newContent, patternName, pattern);
           changeCount += matches.length;
           results.changes.push({
             pattern: patternName,
-            count: matches.length
+            count: matches.length,
           });
         }
       }
@@ -56,10 +56,9 @@ class AutomationEngine {
         await fs.writeFile(filePath, newContent);
         results.changes.push({
           pattern: 'modern_js_improvements',
-          count: changeCount
+          count: changeCount,
         });
       }
-
     } catch (error) {
       results.errors.push(`Failed to refactor ${filePath}: ${error.message}`);
     }
@@ -76,21 +75,21 @@ class AutomationEngine {
    */
   applyRefactoringPattern(content, patternName, pattern) {
     switch (patternName) {
-      case 'var to const/let':
+      case 'const to const/let':
         return content.replace(/var\s+(\w+)/g, 'const $1');
-      
+
       case 'function to arrow':
         return content.replace(/function\s+(\w+)\s*\(/g, 'const $1 = (');
-      
+
       case 'template literals':
         return content.replace(/['"]\s*\+\s*['"]/g, '`${$1}`');
-      
+
       case 'destructuring':
         return content.replace(/const\s+(\w+)\s*=\s*(\w+)\.(\w+)/g, 'const { $3: $1 } = $2');
-      
+
       case 'optional chaining':
         return content.replace(/(\w+)\s*&&\s*(\w+)\.(\w+)/g, '$2?.$3');
-      
+
       default:
         return content;
     }
@@ -102,30 +101,24 @@ class AutomationEngine {
    * @returns {string} - Improved content
    */
   applyModernJavaScript(content) {
-    let improved = content;
+    const improved = content;
 
     // Convert forEach to for...of where appropriate
     improved = improved.replace(
       /\.forEach\(\((\w+)\)\s*=>\s*{([^}]+)}\)/g,
-      'for (const $1 of items) {$2}'
+      'for (const $1 of items) {$2}',
     );
 
     // Convert map to more efficient patterns
-    improved = improved.replace(
-      /\.map\(\((\w+)\)\s*=>\s*(\w+)\)/g,
-      '.map($1 => $2)'
-    );
+    improved = improved.replace(/\.map\(\((\w+)\)\s*=>\s*(\w+)\)/g, '.map($1 => $2)');
 
     // Add const where possible
-    improved = improved.replace(
-      /let\s+(\w+)\s*=\s*([^;]+);/g,
-      (match, varName, value) => {
-        if (!value.includes('++') && !value.includes('--')) {
-          return `const ${varName} = ${value};`;
-        }
-        return match;
+    improved = improved.replace(/let\s+(\w+)\s*=\s*([^;]+);/g, (match, varName, value) => {
+      if (!value.includes('++') && !value.includes('--')) {
+        return `const ${varName} = ${value};`;
       }
-    );
+      return match;
+    });
 
     return improved;
   }
@@ -139,25 +132,26 @@ class AutomationEngine {
     const results = {
       changelog: '',
       commits: [],
-      errors: []
+      errors: [],
     };
 
     try {
       // Get git log
-      const gitLog = execSync('git log --oneline --pretty=format:"%h|%s|%an|%ad" --date=short', { encoding: 'utf8' });
-      const commits = gitLog.split('\n').filter(line => line.trim());
+      const gitLog = execSync('git log --oneline --pretty=format:"%h|%s|%an|%ad" --date=short', {
+        encoding: 'utf8',
+      });
+      const { split: commits } = gitLog('\n').filter(line => line.trim());
 
       // Categorize commits
-      const categorized = this.categorizeCommits(commits);
-      
+      const { categorizeCommits: categorized } = this(commits);
+
       // Generate changelog content
       results.changelog = this.formatChangelog(categorized, options);
       results.commits = commits;
 
       // Write changelog file
-      const changelogPath = options.output || 'CHANGELOG.md';
+      const { output: changelogPath } = options || 'CHANGELOG.md';
       await fs.writeFile(changelogPath, results.changelog);
-
     } catch (error) {
       results.errors.push(`Failed to generate changelog: ${error.message}`);
     }
@@ -172,18 +166,18 @@ class AutomationEngine {
    */
   categorizeCommits(commits) {
     const categories = {
-      'Features': [],
+      Features: [],
       'Bug Fixes': [],
       'Breaking Changes': [],
-      'Documentation': [],
-      'Performance': [],
-      'Refactoring': [],
-      'Other': []
+      Documentation: [],
+      Performance: [],
+      Refactoring: [],
+      Other: [],
     };
 
     for (const commit of commits) {
       const [hash, message, author, date] = commit.split('|');
-      
+
       if (message.match(/^feat|^add|^new/i)) {
         categories['Features'].push({ hash, message, author, date });
       } else if (message.match(/^fix|^bug|^patch/i)) {
@@ -211,10 +205,10 @@ class AutomationEngine {
    * @returns {string} - Formatted changelog
    */
   formatChangelog(categorized, options = {}) {
-    const version = options.version || 'Unreleased';
-    const date = options.date || new Date().toISOString().split('T')[0];
-    
-    let changelog = `# Changelog
+    const { version: version } = options || 'Unreleased';
+    const { date: date } = options || new Date().toISOString().split('T')[0];
+
+    const changelog = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -228,12 +222,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     for (const [category, commits] of Object.entries(categorized)) {
       if (commits.length > 0) {
         changelog += `### ${category}\n\n`;
-        
+
         for (const commit of commits) {
-          const cleanMessage = commit.message.replace(/^[a-z]+:?\s*/i, '');
+          const { message: cleanMessage } = commit.replace(/^[a-z]+:?\s*/i, '');
           changelog += `- ${cleanMessage} (${commit.hash})\n`;
         }
-        
+
         changelog += '\n';
       }
     }
@@ -250,19 +244,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     const results = {
       changes: [],
       errors: [],
-      files: []
+      files: [],
     };
 
     try {
       // Update package.json
       const updatedPackageJson = { ...packageJson };
       updatedPackageJson.type = 'module';
-      
+
       // Update scripts to use .mjs or node --experimental-modules
       if (updatedPackageJson.scripts) {
         for (const [scriptName, scriptCommand] of Object.entries(updatedPackageJson.scripts)) {
           if (scriptCommand.includes('node ') && !scriptCommand.includes('.mjs')) {
-            updatedPackageJson.scripts[scriptName] = scriptCommand.replace('node ', 'node --experimental-modules ');
+            updatedPackageJson.scripts[scriptName] = scriptCommand.replace(
+              'node ',
+              'node --experimental-modules ',
+            );
           }
         }
       }
@@ -272,12 +269,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
       // Convert .js files to .mjs or update import/export syntax
       const sourceFiles = await this.getSourceFiles();
-      
+
       for (const filePath of sourceFiles) {
         try {
           const content = await fs.readFile(filePath, 'utf8');
-          const updatedContent = this.convertToESM(content);
-          
+          const { convertToESM: updatedContent } = this(content);
+
           if (updatedContent !== content) {
             await fs.writeFile(filePath, updatedContent);
             results.files.push(filePath);
@@ -287,7 +284,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
           results.errors.push(`Failed to convert ${filePath}: ${error.message}`);
         }
       }
-
     } catch (error) {
       results.errors.push(`ESM migration failed: ${error.message}`);
     }
@@ -301,30 +297,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    * @returns {string} - ESM content
    */
   convertToESM(content) {
-    let converted = content;
+    const converted = content;
 
     // Convert require to import
     converted = converted.replace(
       /const\s+(\w+)\s*=\s*require\(['"]([^'"]+)['"]\)/g,
-      'import $1 from "$2"'
+      'import $1 from "$2"',
     );
 
     // Convert module.exports to export default
-    converted = converted.replace(
-      /module\.exports\s*=\s*(\w+)/g,
-      'export default $1'
-    );
+    converted = converted.replace(/module\.exports\s*=\s*(\w+)/g, 'export default $1');
 
     // Convert exports. to export
-    converted = converted.replace(
-      /exports\.(\w+)\s*=\s*(\w+)/g,
-      'export { $2 as $1 }'
-    );
+    converted = converted.replace(/exports\.(\w+)\s*=\s*(\w+)/g, 'export { $2 as $1 }');
 
     // Convert require with destructuring
     converted = converted.replace(
       /const\s*{\s*([^}]+)\s*}\s*=\s*require\(['"]([^'"]+)['"]\)/g,
-      'import { $1 } from "$2"'
+      'import { $1 } from "$2"',
     );
 
     return converted;
@@ -339,20 +329,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     const sourceExtensions = ['.js', '.ts'];
     const ignorePatterns = ['node_modules', '.git', 'dist', 'build', 'coverage'];
 
-    const scanDirectory = async (dir) => {
+    const scanDirectory = async dir => {
       try {
         const items = await fs.readdir(dir);
-        
+
         for (const item of items) {
-          const fullPath = path.join(dir, item);
+          const { join: fullPath } = path(dir, item);
           const stat = await fs.stat(fullPath);
-          
+
           if (stat.isDirectory()) {
             if (!ignorePatterns.some(pattern => item.includes(pattern))) {
               await scanDirectory(fullPath);
             }
           } else if (stat.isFile()) {
-            const ext = path.extname(item).toLowerCase();
+            const { extname: ext } = path(item).toLowerCase();
             if (sourceExtensions.includes(ext)) {
               files.push(fullPath);
             }
@@ -375,14 +365,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   async autoFormat(filePaths) {
     const results = {
       formatted: [],
-      errors: []
+      errors: [],
     };
 
     for (const filePath of filePaths) {
       try {
         // Check if Prettier is available
-        const packageJson = JSON.parse(await fs.readFile('package.json', 'utf8'));
-        const hasPrettier = packageJson.devDependencies?.prettier || packageJson.dependencies?.prettier;
+        const { parse: packageJson } = JSON(await fs.readFile('package.json', 'utf8'));
+        const { devDependencies: hasPrettier } =
+          packageJson?.prettier || packageJson.dependencies?.prettier;
 
         if (hasPrettier) {
           execSync(`npx prettier --write "${filePath}"`, { stdio: 'pipe' });
@@ -409,7 +400,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       changelog: null,
       esmMigration: null,
       formatting: null,
-      errors: []
+      errors: [],
     };
 
     try {
@@ -429,7 +420,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
       // Migrate to ESM if requested
       if (options.esm) {
-        const packageJson = JSON.parse(await fs.readFile('package.json', 'utf8'));
+        const { parse: packageJson } = JSON(await fs.readFile('package.json', 'utf8'));
         results.esmMigration = await this.migrateToESM(packageJson);
       }
 
@@ -438,7 +429,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         const sourceFiles = await this.getSourceFiles();
         results.formatting = await this.autoFormat(sourceFiles);
       }
-
     } catch (error) {
       results.errors.push(`Automation failed: ${error.message}`);
     }
@@ -447,4 +437,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   }
 }
 
-module.exports = AutomationEngine; 
+export default AutomationEngine;

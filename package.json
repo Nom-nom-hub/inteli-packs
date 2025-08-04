@@ -7,18 +7,18 @@
     "inteli-packs": "./index.js"
   },
   "scripts": {
-    "start": "node index.js",
-    "test": "node test/cli.test.js",
-    "test:coverage": "node test/cli.test.js --coverage",
+    "start": "node --experimental-modules index.js",
+    "test": "node --experimental-modules test/cli.test.js",
+    "test:coverage": "node --experimental-modules test/cli.test.js --coverage",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "dev": "node index.js --verbose",
+    "dev": "node --experimental-modules index.js --verbose",
     "pack": "npm pack",
     "prepublishOnly": "npm run validate && npm test && npm run lint",
-    "validate": "node scripts/validate-cli.js",
-    "init": "node scripts/init.js",
-    "setup-docs": "node scripts/setup-docs.js",
+    "validate": "node --experimental-modules scripts/validate-cli.js",
+    "init": "node --experimental-modules scripts/init.js",
+    "setup-docs": "node --experimental-modules scripts/setup-docs.js",
     "docs:dev": "cd docs && npm start",
     "docs:build": "cd docs && npm run build",
     "docs:serve": "cd docs && npm run serve"
@@ -116,5 +116,6 @@
   "cpu": [
     "x64",
     "arm64"
-  ]
-} 
+  ],
+  "type": "module"
+}

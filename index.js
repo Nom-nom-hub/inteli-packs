@@ -5,10 +5,10 @@
  * Smart developer assistant for Node.js project optimization
  */
 
-const { program } = require('commander');
-const chalk = require('chalk');
-const CommandsHandler = require('./commands');
-const { loadEnvironment } = require('./utils');
+import { program } from "commander";
+import chalk from "chalk";
+import CommandsHandler from "./commands.js";
+import { loadEnvironment } from "./utils.js";
 
 // Load environment variables
 loadEnvironment();
@@ -32,7 +32,7 @@ program
   .option('--test-models', 'Test all available AI models')
   .parse();
 
-const options = program.opts();
+const { opts: options } = program();
 
 /**
  * Main application entry point

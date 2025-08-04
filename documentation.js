@@ -3,21 +3,14 @@
  * Handles auto-generated docs folder using Gemini
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const chalk = require('chalk');
+import fs from 'fs-extra';
+import path from 'path';
+import chalk from 'chalk';
 
 class DocumentationGenerator {
   constructor() {
     this.docsDir = 'docs';
-    this.sections = [
-      'api',
-      'examples',
-      'guides',
-      'troubleshooting',
-      'contributing',
-      'changelog'
-    ];
+    this.sections = ['api', 'examples', 'guides', 'troubleshooting', 'contributing', 'changelog'];
   }
 
   /**
@@ -28,7 +21,7 @@ class DocumentationGenerator {
   async generateDocumentation(packageJson) {
     const results = {
       files: [],
-      errors: []
+      errors: [],
     };
 
     try {
@@ -58,7 +51,6 @@ class DocumentationGenerator {
       // Generate contributing guidelines
       const contributing = await this.generateContributing(packageJson);
       results.files.push(...contributing);
-
     } catch (error) {
       results.errors.push(`Documentation generation failed: ${error.message}`);
     }
@@ -98,7 +90,7 @@ npm install ${packageJson.name}
 ${packageJson.license || 'MIT'}
 `;
 
-    const indexPath = path.join(this.docsDir, 'index.md');
+    const { join: indexPath } = path(this.docsDir, 'index.md');
     await fs.writeFile(indexPath, indexContent);
     files.push({ path: indexPath, type: 'index' });
 
@@ -139,7 +131,7 @@ GEMINI_API_KEY=your_api_key_here
 \`\`\`
 `;
 
-    const installPath = path.join(this.docsDir, 'installation.md');
+    const { join: installPath } = path(this.docsDir, 'installation.md');
     await fs.writeFile(installPath, installContent);
     files.push({ path: installPath, type: 'installation' });
 
@@ -155,7 +147,7 @@ GEMINI_API_KEY=your_api_key_here
     const files = [];
 
     // Create API directory
-    const apiDir = path.join(this.docsDir, 'api');
+    const { join: apiDir } = path(this.docsDir, 'api');
     await fs.ensureDir(apiDir);
 
     // Generate API index
@@ -174,7 +166,7 @@ This document provides detailed API documentation for ${packageJson.name}.
 ## Quick Reference
 
 \`\`\`javascript
-const { analyzeDependencies, generateReadme } = require('${packageJson.name}');
+import { analyzeDependencies, generateReadme  } from "${packageJson.name}";
 
 // Analyze dependencies
 const analysis = await analyzeDependencies(packageJson, sourceFiles);
@@ -184,7 +176,7 @@ const readme = await generateReadme(packageJson);
 \`\`\`
 `;
 
-    const apiIndexPath = path.join(apiDir, 'README.md');
+    const { join: apiIndexPath } = path(apiDir, 'README.md');
     await fs.writeFile(apiIndexPath, apiIndexContent);
     files.push({ path: apiIndexPath, type: 'api_index' });
 
@@ -245,7 +237,7 @@ const response = await gemini.query('Analyze this code');
 \`\`\`
 `;
 
-    const coreApiPath = path.join(apiDir, 'core.md');
+    const { join: coreApiPath } = path(apiDir, 'core.md');
     await fs.writeFile(coreApiPath, coreApiContent);
     files.push({ path: coreApiPath, type: 'core_api' });
 
@@ -261,7 +253,7 @@ const response = await gemini.query('Analyze this code');
     const files = [];
 
     // Create examples directory
-    const examplesDir = path.join(this.docsDir, 'examples');
+    const { join: examplesDir } = path(this.docsDir, 'examples');
     await fs.ensureDir(examplesDir);
 
     // Generate examples index
@@ -274,7 +266,7 @@ This section contains practical examples of how to use ${packageJson.name}.
 ### Dependency Analysis
 
 \`\`\`javascript
-const { ProjectAnalyzer } = require('${packageJson.name}');
+import { ProjectAnalyzer  } from "${packageJson.name}";
 
 const analyzer = new ProjectAnalyzer();
 const results = await analyzer.analyzeDependencies();
@@ -286,7 +278,7 @@ console.log('Missing dependencies:', results.missingDependencies);
 ### README Generation
 
 \`\`\`javascript
-const { GeminiAPI } = require('${packageJson.name}');
+import { GeminiAPI  } from "${packageJson.name}";
 
 const gemini = new GeminiAPI();
 const readme = await gemini.generateReadme(packageJson);
@@ -311,7 +303,7 @@ npx ${packageJson.name} --auto-fix
 \`\`\`
 `;
 
-    const examplesIndexPath = path.join(examplesDir, 'README.md');
+    const { join: examplesIndexPath } = path(examplesDir, 'README.md');
     await fs.writeFile(examplesIndexPath, examplesIndexContent);
     files.push({ path: examplesIndexPath, type: 'examples_index' });
 
@@ -327,7 +319,7 @@ npx ${packageJson.name} --auto-fix
     const files = [];
 
     // Create guides directory
-    const guidesDir = path.join(this.docsDir, 'guides');
+    const { join: guidesDir } = path(this.docsDir, 'guides');
     await fs.ensureDir(guidesDir);
 
     // Generate getting started guide
@@ -373,7 +365,7 @@ ${packageJson.name} is a smart developer assistant that uses AI to analyze and o
 - Learn about [Advanced Usage](./advanced.md)
 `;
 
-    const gettingStartedPath = path.join(guidesDir, 'getting-started.md');
+    const { join: gettingStartedPath } = path(guidesDir, 'getting-started.md');
     await fs.writeFile(gettingStartedPath, gettingStartedContent);
     files.push({ path: gettingStartedPath, type: 'getting_started' });
 
@@ -389,7 +381,7 @@ ${packageJson.name} is a smart developer assistant that uses AI to analyze and o
     const files = [];
 
     // Create troubleshooting directory
-    const troubleshootingDir = path.join(this.docsDir, 'troubleshooting');
+    const { join: troubleshootingDir } = path(this.docsDir, 'troubleshooting');
     await fs.ensureDir(troubleshootingDir);
 
     // Generate troubleshooting guide
@@ -436,7 +428,7 @@ If you're still experiencing issues:
 3. Try the [Examples](../examples/README.md)
 `;
 
-    const troubleshootingPath = path.join(troubleshootingDir, 'README.md');
+    const { join: troubleshootingPath } = path(troubleshootingDir, 'README.md');
     await fs.writeFile(troubleshootingPath, troubleshootingContent);
     files.push({ path: troubleshootingPath, type: 'troubleshooting' });
 
@@ -452,7 +444,7 @@ If you're still experiencing issues:
     const files = [];
 
     // Create contributing directory
-    const contributingDir = path.join(this.docsDir, 'contributing');
+    const { join: contributingDir } = path(this.docsDir, 'contributing');
     await fs.ensureDir(contributingDir);
 
     // Generate contributing guide
@@ -528,7 +520,7 @@ npm run test:coverage
 Feel free to open an issue for questions or discussions.
 `;
 
-    const contributingPath = path.join(contributingDir, 'README.md');
+    const { join: contributingPath } = path(contributingDir, 'README.md');
     await fs.writeFile(contributingPath, contributingContent);
     files.push({ path: contributingPath, type: 'contributing' });
 
@@ -536,4 +528,4 @@ Feel free to open an issue for questions or discussions.
   }
 }
 
-module.exports = DocumentationGenerator; 
+export default DocumentationGenerator;

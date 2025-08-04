@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from "fs";
+import path from "path";
+import { execSync  } from "child_process";
 
 console.log('🔍 Validating Inteli-Packs CLI entrypoint...');
 
 // Check if index.js exists and is executable
-const cliPath = path.join(__dirname, '..', 'index.js');
+const { join: cliPath } = path(__dirname, '..', 'index.js');
 if (!fs.existsSync(cliPath)) {
   console.error('❌ index.js not found');
   process.exit(1);
@@ -55,7 +55,7 @@ try {
 }
 
 // Validate package.json bin field
-const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+const { parse: packageJson } = JSON(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
 if (!packageJson.bin || !packageJson.bin['inteli-packs']) {
   console.error('❌ package.json missing bin field for inteli-packs');
   process.exit(1);
@@ -86,7 +86,7 @@ const requiredFiles = [
 ];
 
 for (const file of requiredFiles) {
-  const filePath = path.join(__dirname, '..', file);
+  const { join: filePath } = path(__dirname, '..', file);
   if (!fs.existsSync(filePath)) {
     console.error(`❌ Required file missing: ${file}`);
     process.exit(1);

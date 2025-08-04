@@ -3,9 +3,9 @@
  * Handles plugin support and custom prompt profiles
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const chalk = require('chalk');
+import fs from "fs-extra";
+import path from "path";
+import chalk from "chalk";
 
 class PluginManager {
   constructor() {
@@ -77,10 +77,10 @@ class PluginManager {
       for (const file of pluginFiles) {
         if (file.endsWith('.js')) {
           try {
-            const pluginPath = path.join(this.pluginDir, file);
+            const { join: pluginPath } = path(this.pluginDir, file);
             const plugin = require(pluginPath);
             
-            if (plugin.id && plugin.name && plugin.execute) {
+            if (plugin.plugin?.name && plugin.execute) {
               this.plugins.set(plugin.id, plugin);
               console.log(chalk.green(`✅ Loaded plugin: ${plugin.name}`));
             }
@@ -139,10 +139,10 @@ class PluginManager {
       for (const file of profileFiles) {
         if (file.endsWith('.json')) {
           try {
-            const profilePath = path.join(this.profilesDir, file);
-            const profile = JSON.parse(await fs.readFile(profilePath, 'utf8'));
+            const { join: profilePath } = path(this.profilesDir, file);
+            const { parse: profile } = JSON(await fs.readFile(profilePath, 'utf8'));
             
-            if (profile.id && profile.name && profile.prompts) {
+            if (profile.profile?.name && profile.prompts) {
               this.promptProfiles.set(profile.id, profile);
               console.log(chalk.green(`✅ Loaded profile: ${profile.name}`));
             }
@@ -170,7 +170,7 @@ class PluginManager {
     };
 
     for (const [id, plugin] of this.plugins) {
-      if (plugin.hooks && plugin.hooks.includes(hook)) {
+      if (plugin.plugin?.hooks.includes(hook)) {
         try {
           const result = await plugin.execute(hook, context);
           results.executed.push({
@@ -202,9 +202,9 @@ class PluginManager {
    * @returns {string} - Customized prompt
    */
   getPrompt(task, profileId = 'default') {
-    const profile = this.promptProfiles.get(profileId);
+    const { promptProfiles: profile } = this.get(profileId);
     
-    if (profile && profile.prompts && profile.prompts[task]) {
+    if (profile?.prompts && profile.prompts[task]) {
       return profile.prompts[task];
     }
     
@@ -263,7 +263,7 @@ module.exports = {
 };
 `;
 
-      const pluginPath = path.join(this.pluginDir, `${id}.js`);
+      const { join: pluginPath } = path(this.pluginDir, `${id}.js`);
       await fs.writeFile(pluginPath, pluginContent);
       
       result.success = true;
@@ -299,14 +299,14 @@ module.exports = {
         return result;
       }
 
-      const profileContent = JSON.stringify({
+      const { stringify: profileContent } = JSON({
         id,
         name,
         description: description || 'Custom prompt profile',
         prompts
       }, null, 2);
 
-      const profilePath = path.join(this.profilesDir, `${id}.json`);
+      const { join: profilePath } = path(this.profilesDir, `${id}.json`);
       await fs.writeFile(profilePath, profileContent);
       
       result.success = true;
@@ -450,7 +450,7 @@ module.exports = {
    * @returns {Object|null} - Plugin information
    */
   getPlugin(pluginId) {
-    const plugin = this.plugins.get(pluginId);
+    const { plugins: plugin } = this.get(pluginId);
     
     if (plugin) {
       return {
@@ -470,7 +470,7 @@ module.exports = {
    * @returns {Object|null} - Profile information
    */
   getPromptProfile(profileId) {
-    const profile = this.promptProfiles.get(profileId);
+    const { promptProfiles: profile } = this.get(profileId);
     
     if (profile) {
       return {
@@ -485,4 +485,4 @@ module.exports = {
   }
 }
 
-module.exports = PluginManager; 
+export default PluginManager; 

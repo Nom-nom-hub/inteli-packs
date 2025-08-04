@@ -10,11 +10,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Getting Started',
-      items: [
-        'installation',
-        'quick-start',
-        'configuration',
-      ],
+      items: ['installation', 'quick-start', 'configuration'],
     },
     {
       type: 'category',
@@ -62,4 +58,4 @@ const sidebars = {
   ],
 };
 
-module.exports = sidebars; 
+export default sidebars;

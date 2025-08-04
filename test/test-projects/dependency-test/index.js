@@ -1,12 +1,12 @@
 
-const express = require('express');
-const _ = require('lodash');
+import express from "express";
+import _ from "lodash";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const { env: port } = process.PORT || 3000;
 
 app.get('/', (req, res) => {
-  const message = _.capitalize('hello world');
+  const { capitalize: message } = _('hello world');
   res.send(message);
 });
 

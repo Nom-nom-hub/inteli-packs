@@ -4,26 +4,24 @@ module.exports = {
     node: true,
     es2021: true,
   },
-  extends: [
-    'eslint:recommended',
-  ],
+  extends: ['eslint:recommended'],
   parserOptions: {
     ecmaVersion: 12,
     sourceType: 'module',
   },
   rules: {
     // Disable ALL problematic rules for CLI tool
-    'indent': 'off',
+    indent: 'off',
     'linebreak-style': 'off',
-    'quotes': 'off',
-    'semi': 'off',
+    quotes: 'off',
+    semi: 'off',
     'comma-dangle': 'off',
     'no-unused-vars': 'warn',
     'object-shorthand': 'off',
     'prefer-template': 'off',
     'max-len': 'off',
     'no-console': 'off',
-    'complexity': 'off',
+    complexity: 'off',
     'max-depth': 'off',
     'no-await-in-loop': 'off',
     'no-case-declarations': 'off',
@@ -88,17 +86,17 @@ module.exports = {
     'no-void': 'off',
     'prefer-promise-reject-errors': 'off',
     'require-await': 'off',
-    'yoda': 'off',
+    yoda: 'off',
   },
   overrides: [
     {
       files: ['example/**/*.js'],
       rules: {
         // Even more permissive for example files
-        'quotes': 'off',
+        quotes: 'off',
         'comma-dangle': 'off',
         'no-console': 'off',
       },
     },
   ],
-}; 
+};

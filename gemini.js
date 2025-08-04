@@ -4,18 +4,19 @@
  * @deprecated Use AIProvider from ai-providers.js instead
  */
 
-const axios = require('axios');
-const chalk = require('chalk');
-const fs = require('fs-extra');
-const path = require('path');
+import axios from 'axios';
+import chalk from 'chalk';
+import fs from 'fs-extra';
+import path from 'path';
 
 class GeminiAPI {
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY;
-    this.baseURL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    this.baseURL =
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
     this.conversationHistory = [];
     this.promptMemory = new Map();
-    
+
     if (!this.apiKey) {
       throw new Error('GEMINI_API_KEY environment variable is required');
     }
@@ -28,9 +29,9 @@ class GeminiAPI {
   addToMemory(context) {
     this.conversationHistory.push({
       timestamp: new Date().toISOString(),
-      context: context
+      context: context,
     });
-    
+
     // Keep only last 10 conversations for memory
     if (this.conversationHistory.length > 10) {
       this.conversationHistory.shift();
@@ -43,7 +44,7 @@ class GeminiAPI {
    */
   getConversationContext() {
     if (this.conversationHistory.length === 0) return '';
-    
+
     return `Previous conversation context:\n${this.conversationHistory
       .slice(-3)
       .map(conv => `- ${conv.context}`)
@@ -83,11 +84,18 @@ Format as JSON array:
 `;
 
     const response = await this.query(prompt);
-    
+
     try {
       return JSON.parse(response.text);
     } catch (error) {
-      return [{ suggestion: "Could not parse suggestions", code: "", explanation: "Error parsing AI response", impact: "low" }];
+      return [
+        {
+          suggestion: 'Could not parse suggestions',
+          code: '',
+          explanation: 'Error parsing AI response',
+          impact: 'low',
+        },
+      ];
     }
   }
 
@@ -121,11 +129,11 @@ Examples:
 `;
 
     const response = await this.query(prompt);
-    
+
     try {
       return JSON.parse(response.text);
     } catch (error) {
-      return { action: "unknown", target: "unknown", options: {}, confidence: 0.0 };
+      return { action: 'unknown', target: 'unknown', options: {}, confidence: 0.0 };
     }
   }
 
@@ -138,10 +146,10 @@ Examples:
     // Remove markdown code blocks
     text = text.replace(/```(?:json|javascript|js)?\s*\n?/g, '');
     text = text.replace(/```\s*$/g, '');
-    
+
     // Remove leading/trailing whitespace
     text = text.trim();
-    
+
     return text;
   }
 
@@ -152,22 +160,26 @@ Examples:
    * @returns {Promise<Object>} - Gemini API response
    */
   async query(prompt, options = {}) {
-    const startTime = Date.now();
-    
+    const { now: startTime } = Date();
+
     try {
       // Log API call for rate tracking
-      const { logApiCall } = require('./utils');
+      const { logApiCall } = await import('./utils.js');
       const apiLog = logApiCall('gemini-1.5-flash:generateContent', options);
-      
+
       // Add conversation context for memory
-      const contextPrompt = this.getConversationContext() + prompt;
-      
+      const { getConversationContext: contextPrompt } = this() + prompt;
+
       const requestBody = {
-        contents: [{
-          parts: [{
-            text: contextPrompt
-          }]
-        }],
+        contents: [
+          {
+            parts: [
+              {
+                text: contextPrompt,
+              },
+            ],
+          },
+        ],
         generationConfig: {
           temperature: options.temperature || 0.3,
           topK: options.topK || 40,
@@ -176,95 +188,94 @@ Examples:
         },
         safetySettings: [
           {
-            category: "HARM_CATEGORY_HARASSMENT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            category: 'HARM_CATEGORY_HARASSMENT',
+            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
           },
           {
-            category: "HARM_CATEGORY_HATE_SPEECH",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            category: 'HARM_CATEGORY_HATE_SPEECH',
+            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
           },
           {
-            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
           },
           {
-            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-          }
-        ]
+            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+          },
+        ],
       };
 
-      const response = await axios.post(
-        `${this.baseURL}?key=${this.apiKey}`,
-        requestBody,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          timeout: 30000, // 30 second timeout
-        }
-      );
+      const response = await axios.post(`${this.baseURL}?key=${this.apiKey}`, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 30000, // 30 second timeout
+      });
 
-      const duration = Date.now() - startTime;
-      
-      if (response.data.candidates && response.data.candidates[0]) {
-        const rawText = response.data.candidates[0].content.parts[0].text;
-        
+      const { now: duration } = Date() - startTime;
+
+      if (response.data.response?.data.candidates[0]) {
+        const { data: rawText } = response.candidates[0].content.parts[0].text;
+
         // Store in memory
-        this.addToMemory(`Query: ${prompt.substring(0, 100)}... Response: ${rawText.substring(0, 100)}...`);
-        
+        this.addToMemory(
+          `Query: ${prompt.substring(0, 100)}... Response: ${rawText.substring(0, 100)}...`,
+        );
+
         // Log successful API call
         if (process.env.NODE_ENV === 'development' || process.argv.includes('--verbose')) {
-          const { formatDuration } = require('./utils');
+          const { formatDuration } = await import('./utils.js');
           console.log(chalk.gray(`✅ API call completed in ${formatDuration(duration)}`));
         }
-        
+
         return {
           success: true,
           text: this.cleanResponse(rawText),
           usage: response.data.usageMetadata,
-          duration
+          duration,
         };
       } else {
         throw new Error('Invalid response format from Gemini API');
       }
-
     } catch (error) {
-      const duration = Date.now() - startTime;
-      
+      const { now: duration } = Date() - startTime;
+
       // Handle rate limiting
-      if (error.response && error.response.status === 429) {
-        console.warn(chalk.yellow('⚠️  Rate limit exceeded. Please wait before making more requests.'));
+      if (error.error?.response.status === 429) {
+        console.warn(
+          chalk.yellow('⚠️  Rate limit exceeded. Please wait before making more requests.'),
+        );
         throw new Error('API rate limit exceeded. Please try again later.');
       }
-      
+
       // Handle API key issues
-      if (error.response && error.response.status === 400) {
+      if (error.error?.response.status === 400) {
         console.error(chalk.red('❌ Invalid API key or request format'));
         throw new Error('Invalid API key. Please check your GEMINI_API_KEY environment variable.');
       }
-      
+
       // Handle timeout
       if (error.code === 'ECONNABORTED') {
         console.warn(chalk.yellow('⚠️  API request timed out'));
         throw new Error('Gemini API request timed out. Please try again.');
       }
-      
+
       // Handle network errors
       if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
         console.error(chalk.red('❌ Network error. Please check your internet connection.'));
         throw new Error('Network error. Please check your internet connection.');
       }
-      
+
       // Log error details in development
       if (process.env.NODE_ENV === 'development' || process.argv.includes('--verbose')) {
         console.error(chalk.red('❌ API Error Details:'), {
           status: error.response?.status,
           message: error.message,
-          duration: `${duration}ms`
+          duration: `${duration}ms`,
         });
       }
-      
+
       throw new Error(`Gemini API Error: ${error.message}`);
     }
   }
@@ -314,7 +325,7 @@ Focus on practical, actionable recommendations. Be concise and specific.
 `;
 
     const response = await this.query(prompt);
-    
+
     try {
       return JSON.parse(response.text);
     } catch (parseError) {
@@ -415,4 +426,4 @@ Example format:
   }
 }
 
-module.exports = GeminiAPI; 
+export default GeminiAPI;
