@@ -160,7 +160,7 @@ Examples:
    * @returns {Promise<Object>} - Gemini API response
    */
   async query(prompt, options = {}) {
-    const { now: startTime } = Date();
+    const startTime = Date.now();
 
     try {
       // Log API call for rate tracking
@@ -168,7 +168,7 @@ Examples:
       const apiLog = logApiCall('gemini-1.5-flash:generateContent', options);
 
       // Add conversation context for memory
-      const { getConversationContext: contextPrompt } = this() + prompt;
+      const contextPrompt = this.getConversationContext() + prompt;
 
       const requestBody = {
         contents: [
@@ -213,10 +213,10 @@ Examples:
         timeout: 30000, // 30 second timeout
       });
 
-      const { now: duration } = Date() - startTime;
+      const duration = Date.now() - startTime;
 
-      if (response.data.response?.data.candidates[0]) {
-        const { data: rawText } = response.candidates[0].content.parts[0].text;
+      if (response.data.candidates?.[0]) {
+        const rawText = response.data.candidates[0].content.parts[0].text;
 
         // Store in memory
         this.addToMemory(
@@ -239,10 +239,10 @@ Examples:
         throw new Error('Invalid response format from Gemini API');
       }
     } catch (error) {
-      const { now: duration } = Date() - startTime;
+      const duration = Date.now() - startTime;
 
       // Handle rate limiting
-      if (error.error?.response.status === 429) {
+      if (error.response?.status === 429) {
         console.warn(
           chalk.yellow('⚠️  Rate limit exceeded. Please wait before making more requests.'),
         );
@@ -250,7 +250,7 @@ Examples:
       }
 
       // Handle API key issues
-      if (error.error?.response.status === 400) {
+      if (error.response?.status === 400) {
         console.error(chalk.red('❌ Invalid API key or request format'));
         throw new Error('Invalid API key. Please check your GEMINI_API_KEY environment variable.');
       }

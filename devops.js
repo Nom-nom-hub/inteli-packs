@@ -99,7 +99,7 @@ jobs:
       run: npm run build || echo "No build script found"
 `;
 
-    const { join: workflowPath } = path(this.githubWorkflowsDir, 'ci.yml');
+    const workflowPath = path.join(this.githubWorkflowsDir, 'ci.yml');
 
     try {
       await fs.writeFile(workflowPath, workflowContent);
@@ -172,7 +172,7 @@ jobs:
         prerelease: false
 `;
 
-    const { join: workflowPath } = path(this.githubWorkflowsDir, 'cd.yml');
+    const workflowPath = path.join(this.githubWorkflowsDir, 'cd.yml');
 
     try {
       await fs.writeFile(workflowPath, workflowContent);
@@ -240,7 +240,7 @@ jobs:
         base: HEAD~1
 `;
 
-    const { join: workflowPath } = path(this.githubWorkflowsDir, 'security.yml');
+    const workflowPath = path.join(this.githubWorkflowsDir, 'security.yml');
 
     try {
       await fs.writeFile(workflowPath, workflowContent);

@@ -38,7 +38,7 @@ class ProjectAnalyzer {
    */
   loadPackageJson() {
     try {
-      const { readFileSync: content } = fs(this.packageJsonPath, 'utf8');
+      const content = fs.readFileSync(this.packageJsonPath, 'utf8');
       return JSON.parse(content);
     } catch (error) {
       throw new Error(`Failed to load package.json: ${error.message}`);

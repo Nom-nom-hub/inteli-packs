@@ -5,6 +5,7 @@
 
 import inquirer from 'inquirer';
 import chalk from 'chalk';
+import fs from 'fs-extra';
 import ProjectAnalyzer from './analyzer.js';
 import GeminiAPI from './gemini.js';
 import AIProvider from './ai-providers.js';
@@ -135,7 +136,7 @@ class CommandsHandler {
       // Execute pre-analysis plugins
       const preResults = await this.pluginManager.executePlugins('pre-analysis', {});
 
-      const analysis = await this.analyzer.analyzeDependencies();
+      const analysis = await this.analyzer.analyzeProject();
 
       console.log(chalk.blue('📊 Project Analysis Results:'));
       console.log(chalk.gray('──────────────────────────────────────────────────'));
@@ -160,7 +161,7 @@ class CommandsHandler {
       const sourceContents = await Promise.all(
         sourceFiles.map(async file => {
           try {
-            return await require('fs-extra').readFile(file, 'utf8');
+            return await fs.readFile(file, 'utf8');
           } catch {
             return '';
           }
@@ -218,7 +219,7 @@ class CommandsHandler {
     try {
       logInfo('🧹 Starting cleanup process...');
 
-      const analysis = await this.analyzer.analyzeDependencies();
+      const analysis = await this.analyzer.analyzeProject();
 
       if (analysis.unusedDependencies.length === 0) {
         console.log(chalk.green('✅ No unused dependencies found!'));
@@ -244,7 +245,7 @@ class CommandsHandler {
 
         for (const dep of analysis.unusedDependencies) {
           try {
-            const { execSync } = require('child_process');
+            const { execSync } = await import('child_process');
             execSync(`npm uninstall ${dep}`, { stdio: 'inherit' });
             logSuccess(`✅ Removed ${dep}`);
           } catch (error) {
@@ -272,7 +273,7 @@ class CommandsHandler {
       const { analyzer: packageJson } = this.loadPackageJson();
       const readme = await this.gemini.generateReadme(packageJson);
 
-      await require('fs-extra').writeFile('README.md', readme);
+      await fs.writeFile('README.md', readme);
       logSuccess('✅ README.md generated successfully!');
 
       // Execute post-generation plugins
@@ -811,7 +812,7 @@ jspm_packages/
 .pnp.*
 `;
 
-      await require('fs-extra').writeFile('.gitignore', gitignoreContent);
+      await fs.writeFile('.gitignore', gitignoreContent);
       logSuccess('✅ Generated .gitignore');
     } catch (error) {
       logError('❌ Failed to generate .gitignore:', error.message);
@@ -826,7 +827,7 @@ jspm_packages/
       const { analyzer: packageJson } = this.loadPackageJson();
       const eslintConfig = await this.gemini.generateEslintConfig(packageJson);
 
-      await require('fs-extra').writeFile('.eslintrc.js', eslintConfig);
+      await fs.writeFile('.eslintrc.js', eslintConfig);
       logSuccess('✅ Generated .eslintrc.js');
     } catch (error) {
       logError('❌ Failed to generate ESLint config:', error.message);
@@ -840,7 +841,7 @@ jspm_packages/
     try {
       const prettierConfig = await this.gemini.generatePrettierConfig();
 
-      await require('fs-extra').writeFile('.prettierrc', prettierConfig);
+      await fs.writeFile('.prettierrc', prettierConfig);
       logSuccess('✅ Generated .prettierrc');
     } catch (error) {
       logError('❌ Failed to generate Prettier config:', error.message);
