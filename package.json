@@ -1,6 +1,6 @@
 {
   "name": "inteli-packs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Smart developer assistant for Node.js project optimization using 12+ AI providers with automatic fallback",
   "main": "index.js",
   "bin": {
@@ -78,9 +78,9 @@
     "url": "https://github.com/Nom-nom-hub/inteli-packs.git"
   },
   "bugs": {
-          "url": "https://github.com/Nom-nom-hub/inteli-packs/issues"
+    "url": "https://github.com/Nom-nom-hub/inteli-packs/issues"
   },
-      "homepage": "https://github.com/Nom-nom-hub/inteli-packs#readme",
+  "homepage": "https://github.com/Nom-nom-hub/inteli-packs#readme",
   "files": [
     "index.js",
     "analyzer.js",
@@ -120,7 +120,7 @@
   },
   "funding": {
     "type": "github",
-          "url": "https://github.com/Nom-nom-hub/inteli-packs"
+    "url": "https://github.com/Nom-nom-hub/inteli-packs"
   },
   "os": [
     "darwin",
