@@ -23,5 +23,12 @@
   "/inteli-packs/docs/quick-start-f1f": {
     "__comp": "17896441",
     "content": "72e14192"
+  },
+  "/inteli-packs/-fc4": {
+    "__comp": "c4f5d8e4",
+    "__context": {
+      "plugin": "ca9f4135"
+    },
+    "config": "5e9f5e1a"
   }
 }

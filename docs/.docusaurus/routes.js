@@ -39,6 +39,11 @@ export default [
     ]
   },
   {
+    path: '/inteli-packs/',
+    component: ComponentCreator('/inteli-packs/', 'fc4'),
+    exact: true
+  },
+  {
     path: '*',
     component: ComponentCreator('*'),
   },
