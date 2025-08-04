@@ -3,7 +3,7 @@ npm-debug.log
 .git
 .gitignore
 README.md
-# .env files are now tracked for visibility
+.env
 .nyc_output
 coverage
 .nyc_output
@@ -88,7 +88,9 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-# .env files are now tracked for visibility
+.env
+.env.test
+.env.production
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

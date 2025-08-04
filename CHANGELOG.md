@@ -5,15 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2024-08-04
+
+### Added
+- **Groq AI Provider Support**: Added support for Groq's free models with fast inference
+- **Environment File Security**: Added proper `.env` file ignoring and `.env.example` template
+- **Enhanced Documentation**: Updated README and INSTALL.md with Groq setup instructions
+
+### Changed
+- **Updated CLI Options**: Added `groq` to the `--model` option
+- **Improved Environment Loading**: Dynamic provider registration to handle environment variable changes
+- **Security Improvements**: Proper `.gitignore`, `.npmignore`, and `.cursorignore` configuration
+
+### Fixed
+- **Environment Variable Loading**: Fixed BOM issues and dynamic provider registration
+- **Provider Availability Detection**: Improved detection of available AI providers
+- **Documentation**: Updated all documentation to include Groq integration
+
 ## [Unreleased]
 
 ### Added
-- **12+ AI Provider Support**: Added support for OpenRouter, Azure OpenAI, Cohere, Hugging Face, Replicate, Together AI, Perplexity
+- **13+ AI Provider Support**: Added support for OpenRouter, Azure OpenAI, Cohere, Hugging Face, Replicate, Together AI, Perplexity, Groq
 - **Enhanced Fallback Chain**: Improved automatic fallback between 12+ providers
 - **Enterprise Support**: Azure OpenAI integration for enterprise environments
 - **Cost Optimization**: OpenRouter and Together AI for cost-effective analysis
 - **Research Capabilities**: Hugging Face and Replicate for specialized models
-- **Real-time Analysis**: Perplexity for fast inference and real-time analysis
+- **Real-time Analysis**: Perplexity and Groq for fast inference and real-time analysis
 - **Local Privacy**: Enhanced Ollama and LLaMA support for privacy-sensitive projects
 
 ### Changed

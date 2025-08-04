@@ -35,32 +35,46 @@ cp .env.example .env
 npm start
 ```
 
-## Getting Your Gemini API Key
+## Getting Your API Keys
 
+### Gemini API Key (Google AI)
 1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
 2. Sign in with your Google account
 3. Click "Create API Key"
 4. Copy the generated API key
-5. Add it to your `.env` file:
+
+### Groq API Key (Free Tier Available)
+1. Visit [Groq Console](https://console.groq.com/)
+2. Sign up for a free account
+3. Create a new API key
+4. Copy the generated API key
+
+### Adding API Keys to Your Project
+Add your API keys to your `.env` file:
    ```
-   GEMINI_API_KEY=your_api_key_here
+   GEMINI_API_KEY=your_gemini_api_key_here
+   GROQ_API_KEY=your_groq_api_key_here
    ```
 
 ## Configuration
 
 ### Environment Variables
 
-Create a `.env` file in your project root:
+1. **Copy the example file:**
+   ```bash
+   cp .env.example .env
+   ```
 
-```env
-# Required
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Optional
-GEMINI_MODEL=gemini-1.5-flash
-GEMINI_TEMPERATURE=0.3
-GEMINI_MAX_TOKENS=2048
-```
+2. **Edit the `.env` file with your API keys:**
+   ```env
+   # Required: At least one AI provider API key
+   GEMINI_API_KEY=your_gemini_api_key_here
+   GROQ_API_KEY=your_groq_api_key_here
+   
+   # Optional: Model configurations
+   GEMINI_MODEL=gemini-1.5-flash
+   GROQ_MODEL=llama3-8b-8192
+   ```
 
 ### Project Structure
 

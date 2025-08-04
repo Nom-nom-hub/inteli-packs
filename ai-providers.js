@@ -22,10 +22,41 @@ class AIProvider {
    * @param {Object} config - Provider configuration
    */
   registerProvider(name, config) {
+    // Check if provider has required configuration
+    let isAvailable = false;
+    
+    if (name === 'gemini' && config.apiKey) {
+      isAvailable = true;
+    } else if (name === 'openai' && config.apiKey) {
+      isAvailable = true;
+    } else if (name === 'claude' && config.apiKey) {
+      isAvailable = true;
+    } else if (name === 'ollama') {
+      isAvailable = true; // Ollama is local, always available if running
+    } else if (name === 'llama' && config.modelPath) {
+      isAvailable = true;
+    } else if (name === 'openrouter' && config.apiKey) {
+      isAvailable = true;
+    } else if (name === 'azure' && config.apiKey && config.endpoint && config.deploymentName) {
+      isAvailable = true;
+    } else if (name === 'cohere' && config.apiKey) {
+      isAvailable = true;
+    } else if (name === 'huggingface' && config.apiKey) {
+      isAvailable = true;
+    } else if (name === 'replicate' && config.apiKey) {
+      isAvailable = true;
+    } else if (name === 'together' && config.apiKey) {
+      isAvailable = true;
+    } else if (name === 'perplexity' && config.apiKey) {
+      isAvailable = true;
+    } else if (name === 'groq' && config.apiKey) {
+      isAvailable = true;
+    }
+    
     this.providers.set(name, {
       name,
       config,
-      isAvailable: false,
+      isAvailable,
       lastUsed: null,
       errorCount: 0,
     });
@@ -164,6 +195,8 @@ class AIProvider {
         return await this.queryTogetherAI(prompt, config, options);
       case 'perplexity':
         return await this.queryPerplexity(prompt, config, options);
+      case 'groq':
+        return await this.queryGroq(prompt, config, options);
       default:
         throw new Error(`Unsupported provider: ${providerName}`);
     }
@@ -628,6 +661,43 @@ class AIProvider {
   }
 
   /**
+   * Query Groq API
+   */
+  async queryGroq(prompt, config, options = {}) {
+    const { apiKey, model = 'llama3-8b-8192' } = config;
+    if (!apiKey) {
+      throw new Error('GROQ_API_KEY is required for Groq provider');
+    }
+
+    const response = await axios.post(
+      'https://api.groq.com/openai/v1/chat/completions',
+      {
+        model: model,
+        messages: [{
+          role: 'user',
+          content: prompt
+        }],
+        temperature: options.temperature || 0.7,
+        max_tokens: options.maxTokens || 2048,
+      },
+      {
+        timeout: options.timeout || 30000,
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        }
+      }
+    );
+
+    return {
+      text: response.data.choices[0].message.content,
+      provider: 'groq',
+      model: model,
+      usage: response.data.usage
+    };
+  }
+
+  /**
    * Auto-detect available providers
    */
   async autoDetectProviders() {
@@ -689,67 +759,80 @@ class AIProvider {
 // Initialize with default providers
 const AIProviderInstance = new AIProvider();
 
-// Register default providers
-AIProviderInstance.registerProvider('gemini', {
-  apiKey: process.env.GEMINI_API_KEY,
-  model: 'gemini-1.5-flash'
-});
+// Function to register all providers
+const registerProviders = () => {
+  AIProviderInstance.registerProvider('gemini', {
+    apiKey: process.env.GEMINI_API_KEY,
+    model: 'gemini-1.5-flash'
+  });
 
-AIProviderInstance.registerProvider('openai', {
-  apiKey: process.env.OPENAI_API_KEY,
-  model: 'gpt-4'
-});
+  AIProviderInstance.registerProvider('openai', {
+    apiKey: process.env.OPENAI_API_KEY,
+    model: 'gpt-4'
+  });
 
-AIProviderInstance.registerProvider('claude', {
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  model: 'claude-3-sonnet-20240229'
-});
+  AIProviderInstance.registerProvider('claude', {
+    apiKey: process.env.ANTHROPIC_API_KEY,
+    model: 'claude-3-sonnet-20240229'
+  });
 
-AIProviderInstance.registerProvider('ollama', {
-  baseUrl: process.env.OLLAMA_BASE_URL || 'http://localhost:11434',
-  model: process.env.OLLAMA_MODEL || 'llama2'
-});
+  AIProviderInstance.registerProvider('ollama', {
+    baseUrl: process.env.OLLAMA_BASE_URL || 'http://localhost:11434',
+    model: process.env.OLLAMA_MODEL || 'llama2'
+  });
 
-AIProviderInstance.registerProvider('llama', {
-  modelPath: process.env.LLAMA_MODEL_PATH
-});
+  AIProviderInstance.registerProvider('llama', {
+    modelPath: process.env.LLAMA_MODEL_PATH
+  });
 
-// Register new providers
-AIProviderInstance.registerProvider('openrouter', {
-  apiKey: process.env.OPENROUTER_API_KEY,
-  model: process.env.OPENROUTER_MODEL || 'openai/gpt-4'
-});
+  // Register new providers
+  AIProviderInstance.registerProvider('openrouter', {
+    apiKey: process.env.OPENROUTER_API_KEY,
+    model: process.env.OPENROUTER_MODEL || 'openai/gpt-4'
+  });
 
-AIProviderInstance.registerProvider('azure', {
-  apiKey: process.env.AZURE_OPENAI_API_KEY,
-  endpoint: process.env.AZURE_OPENAI_ENDPOINT,
-  deploymentName: process.env.AZURE_OPENAI_DEPLOYMENT_NAME
-});
+  AIProviderInstance.registerProvider('azure', {
+    apiKey: process.env.AZURE_OPENAI_API_KEY,
+    endpoint: process.env.AZURE_OPENAI_ENDPOINT,
+    deploymentName: process.env.AZURE_OPENAI_DEPLOYMENT_NAME
+  });
 
-AIProviderInstance.registerProvider('cohere', {
-  apiKey: process.env.COHERE_API_KEY,
-  model: process.env.COHERE_MODEL || 'command'
-});
+  AIProviderInstance.registerProvider('cohere', {
+    apiKey: process.env.COHERE_API_KEY,
+    model: process.env.COHERE_MODEL || 'command'
+  });
 
-AIProviderInstance.registerProvider('huggingface', {
-  apiKey: process.env.HUGGINGFACE_API_KEY,
-  model: process.env.HUGGINGFACE_MODEL || 'meta-llama/Llama-2-70b-chat-hf'
-});
+  AIProviderInstance.registerProvider('huggingface', {
+    apiKey: process.env.HUGGINGFACE_API_KEY,
+    model: process.env.HUGGINGFACE_MODEL || 'meta-llama/Llama-2-70b-chat-hf'
+  });
 
-AIProviderInstance.registerProvider('replicate', {
-  apiKey: process.env.REPLICATE_API_KEY,
-  model: process.env.REPLICATE_MODEL || 'meta/llama-2-70b-chat:02e509c789ffa4e38dc4c3c8c0b5c7c0b5c7c0b5c7c0b5c7c0b5c7c0b5c7c0b5'
-});
+  AIProviderInstance.registerProvider('replicate', {
+    apiKey: process.env.REPLICATE_API_KEY,
+    model: process.env.REPLICATE_MODEL || 'meta/llama-2-70b-chat:02e509c789ffa4e38dc4c3c8c0b5c7c0b5c7c0b5c7c0b5c7c0b5c7c0b5c7c0b5'
+  });
 
-AIProviderInstance.registerProvider('together', {
-  apiKey: process.env.TOGETHER_API_KEY,
-  model: process.env.TOGETHER_MODEL || 'togethercomputer/llama-2-70b'
-});
+  AIProviderInstance.registerProvider('together', {
+    apiKey: process.env.TOGETHER_API_KEY,
+    model: process.env.TOGETHER_MODEL || 'togethercomputer/llama-2-70b'
+  });
 
-AIProviderInstance.registerProvider('perplexity', {
-  apiKey: process.env.PERPLEXITY_API_KEY,
-  model: process.env.PERPLEXITY_MODEL || 'llama-3.1-8b-instant'
-});
+  AIProviderInstance.registerProvider('perplexity', {
+    apiKey: process.env.PERPLEXITY_API_KEY,
+    model: process.env.PERPLEXITY_MODEL || 'llama-3.1-8b-instant'
+  });
+
+  AIProviderInstance.registerProvider('groq', {
+    apiKey: process.env.GROQ_API_KEY,
+    model: process.env.GROQ_MODEL || 'llama3-8b-8192'
+  });
+};
+
+// Register providers initially
+registerProviders();
+
+// Export a function to re-register providers (useful when env vars change)
+AIProviderInstance.reregisterProviders = registerProviders;
 
 // Set default fallback chain
 AIProviderInstance.setFallbackChain([
@@ -762,6 +845,7 @@ AIProviderInstance.setFallbackChain([
   'ollama',
   'together',
   'perplexity',
+  'groq',
   'huggingface',
   'replicate',
   'llama'

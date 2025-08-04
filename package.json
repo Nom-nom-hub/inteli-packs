@@ -1,6 +1,6 @@
 {
   "name": "inteli-packs",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Smart developer assistant for Node.js project optimization using 12+ AI providers with automatic fallback",
   "main": "index.js",
   "bin": {
@@ -38,6 +38,7 @@
     "replicate",
     "together",
     "perplexity",
+    "groq",
     "ollama",
     "llama",
     "ai",

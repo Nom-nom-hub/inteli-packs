@@ -2,9 +2,7 @@ node_modules/
 dist/
 build/
 coverage/
-.env
-.env.local
-.env.*.local
+# .env files are now tracked for visibility
 .DS_Store
 *.log
 npm-debug.log*

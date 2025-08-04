@@ -64,7 +64,11 @@ pids/
 .yarn-integrity
 
 # dotenv environment variables file
-.env.test
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # parcel-bundler cache
 .cache

@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import fs from 'fs-extra';
 import ProjectAnalyzer from './analyzer.js';
 import GeminiAPI from './gemini.js';
-import AIProvider from './ai-providers.js';
+import aiProvider from './ai-providers.js';
 import SecurityAnalyzer from './security.js';
 import TestingAnalyzer from './testing.js';
 import DevOpsGenerator from './devops.js';
@@ -21,7 +21,7 @@ class CommandsHandler {
   constructor() {
     this.analyzer = new ProjectAnalyzer();
     this.gemini = new GeminiAPI();
-    this.aiProvider = AIProvider;
+    this.aiProvider = aiProvider;
     this.securityAnalyzer = new SecurityAnalyzer();
     this.testingAnalyzer = new TestingAnalyzer();
     this.devOpsGenerator = new DevOpsGenerator();
@@ -35,6 +35,11 @@ class CommandsHandler {
    */
   async initialize() {
     try {
+      // Re-register providers to pick up any new environment variables
+      if (this.aiProvider.reregisterProviders) {
+        this.aiProvider.reregisterProviders();
+      }
+      
       await this.pluginManager.initialize();
       logSuccess('✅ Plugin system initialized');
     } catch (error) {
@@ -899,6 +904,7 @@ jspm_packages/
       console.log(chalk.gray('- REPLICATE_API_KEY: Replicate API key'));
       console.log(chalk.gray('- TOGETHER_API_KEY: Together AI API key'));
       console.log(chalk.gray('- PERPLEXITY_API_KEY: Perplexity API key'));
+      console.log(chalk.gray('- GROQ_API_KEY: Groq API key'));
       console.log(chalk.gray('- OLLAMA_BASE_URL: Ollama server URL (default: http://localhost:11434)'));
       console.log(chalk.gray('- OLLAMA_MODEL: Ollama model name (default: llama2)'));
       console.log(chalk.gray('- LLAMA_MODEL_PATH: Path to local LLaMA model'));

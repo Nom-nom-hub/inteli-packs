@@ -5,7 +5,7 @@
 ## Features
 
 * **Comprehensive Dependency Analysis:**  Identifies unused, missing, and outdated packages.
-* **Multi-Provider AI Integration:** Utilizes Gemini, OpenAI, Claude, OpenRouter, Azure, Cohere, Hugging Face, Replicate, Together, Perplexity, Ollama, and Llama for enhanced analysis and suggestions.  Automatic fallback ensures consistent functionality even if one provider is unavailable.
+* **Multi-Provider AI Integration:** Utilizes Gemini, OpenAI, Claude, OpenRouter, Azure, Cohere, Hugging Face, Replicate, Together, Perplexity, Groq, Ollama, and Llama for enhanced analysis and suggestions.  Automatic fallback ensures consistent functionality even if one provider is unavailable.
 * **Actionable Recommendations:** Provides clear and concise recommendations for optimization, including specific code changes and best practices.
 * **Security Enhancements:** Identifies potential security vulnerabilities in your dependencies and suggests mitigation strategies.
 * **Improved Testing:**  Analyzes your testing strategy and suggests improvements for better code coverage and reliability.
@@ -14,6 +14,32 @@
 * **Cross-Platform Support:** Works seamlessly on macOS, Linux, and Windows.
 * **Extensible Plugin System:** Easily extend Inteli-Packs functionality with custom plugins.
 
+
+## Quick Start
+
+1. **Install Inteli-Packs:**
+   ```bash
+   npm install -g inteli-packs
+   ```
+
+2. **Get your API key:**
+   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey) for Gemini
+   - Visit [Groq Console](https://console.groq.com/) for Groq (free tier available)
+   - Or use any of the supported AI providers
+
+3. **Set up environment variables:**
+   ```bash
+   # Copy the example file
+   cp .env.example .env
+   
+   # Edit with your API keys
+   nano .env
+   ```
+
+4. **Run the analysis:**
+   ```bash
+   inteli-packs
+   ```
 
 ## Installation
 
