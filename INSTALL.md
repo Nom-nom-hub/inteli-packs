@@ -21,7 +21,7 @@ npx inteli-packs
 ### Option 3: Local Development
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/inteli-packs.git
+git clone https://github.com/Nom-nom-hub/inteli-packs.git
 cd inteli-packs
 
 # Install dependencies

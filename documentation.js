@@ -423,7 +423,7 @@ ${packageJson.name} is a smart developer assistant that uses AI to analyze and o
 
 If you're still experiencing issues:
 
-1. Check the [GitHub Issues](https://github.com/your-repo/issues)
+1. Check the [GitHub Issues](https://github.com/Nom-nom-hub/inteli-packs/issues)
 2. Review the [API Documentation](../api/README.md)
 3. Try the [Examples](../examples/README.md)
 `;
@@ -458,7 +458,7 @@ Thank you for your interest in contributing to ${packageJson.name}!
 
 2. **Clone your fork**
    \`\`\`bash
-   git clone https://github.com/your-username/${packageJson.name}.git
+   git clone https://github.com/Nom-nom-hub/${packageJson.name}.git
    cd ${packageJson.name}
    \`\`\`
 

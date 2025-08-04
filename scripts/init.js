@@ -358,7 +358,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Created with [Inteli-Packs](https://github.com/yourusername/inteli-packs)
+- Created with [Inteli-Packs](https://github.com/Nom-nom-hub/inteli-packs)
 `;
 
 fs.writeFileSync('README.md', readme);

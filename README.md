@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/inteli-packs.svg)](https://badge.fury.io/js/inteli-packs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
-[![CI](https://github.com/yourusername/inteli-packs/workflows/CI/badge.svg)](https://github.com/yourusername/inteli-packs/actions)
+[![CI](https://github.com/Nom-nom-hub/inteli-packs/workflows/CI/badge.svg)](https://github.com/Nom-nom-hub/inteli-packs/actions)
 
 Inteli-Packs is a comprehensive AI-powered developer assistant that analyzes, optimizes, and manages Node.js project dependencies and configuration files using multiple AI providers with automatic fallback.
 
@@ -421,7 +421,7 @@ npm run docs:serve
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/inteli-packs.git
+git clone https://github.com/Nom-nom-hub/inteli-packs.git
 cd inteli-packs
 
 # Install dependencies
@@ -453,9 +453,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 - 📧 **Email**: your.email@example.com
-- 🐛 **Issues**: [GitHub Issues](https://github.com/yourusername/inteli-packs/issues)
-- 📖 **Documentation**: [GitHub Wiki](https://github.com/yourusername/inteli-packs/wiki)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/inteli-packs/discussions)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/Nom-nom-hub/inteli-packs/issues)
+- 📖 **Documentation**: [GitHub Wiki](https://github.com/Nom-nom-hub/inteli-packs/wiki)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/Nom-nom-hub/inteli-packs/discussions)
 
 ## 🚀 Roadmap
 

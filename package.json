@@ -61,12 +61,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/inteli-packs.git"
+    "url": "https://github.com/Nom-nom-hub/inteli-packs.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/inteli-packs/issues"
+          "url": "https://github.com/Nom-nom-hub/inteli-packs/issues"
   },
-  "homepage": "https://github.com/yourusername/inteli-packs#readme",
+      "homepage": "https://github.com/Nom-nom-hub/inteli-packs#readme",
   "files": [
     "index.js",
     "analyzer.js",
@@ -106,7 +106,7 @@
   },
   "funding": {
     "type": "github",
-    "url": "https://github.com/yourusername/inteli-packs"
+          "url": "https://github.com/Nom-nom-hub/inteli-packs"
   },
   "os": [
     "darwin",

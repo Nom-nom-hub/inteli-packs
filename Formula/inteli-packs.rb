@@ -1,10 +1,10 @@
 class InteliPacks < Formula
   desc "Smart developer assistant for Node.js project optimization using Gemini AI"
-  homepage "https://github.com/yourusername/inteli-packs"
-  url "https://github.com/yourusername/inteli-packs/archive/refs/tags/v1.0.0.tar.gz"
+  homepage "https://github.com/Nom-nom-hub/inteli-packs"
+  url "https://github.com/Nom-nom-hub/inteli-packs/archive/refs/tags/v1.0.0.tar.gz"
   sha256 "YOUR_SHA256_HERE"  # Replace with actual SHA256 after first release
   license "MIT"
-  head "https://github.com/yourusername/inteli-packs.git", branch: "main"
+  head "https://github.com/Nom-nom-hub/inteli-packs.git", branch: "main"
 
   depends_on "node@20"
 

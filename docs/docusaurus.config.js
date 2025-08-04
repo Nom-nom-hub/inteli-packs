@@ -41,13 +41,13 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/yourusername/inteli-packs/tree/main/docs/',
+          editUrl: 'https://github.com/Nom-nom-hub/inteli-packs/tree/main/docs/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/yourusername/inteli-packs/tree/main/docs/',
+          editUrl: 'https://github.com/Nom-nom-hub/inteli-packs/tree/main/docs/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -76,7 +76,7 @@ const config = {
           },
           { to: '/blog', label: 'Blog', position: 'left' },
           {
-            href: 'https://github.com/yourusername/inteli-packs',
+            href: 'https://github.com/Nom-nom-hub/inteli-packs',
             label: 'GitHub',
             position: 'right',
           },
@@ -107,15 +107,15 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/yourusername/inteli-packs',
+                href: 'https://github.com/Nom-nom-hub/inteli-packs',
               },
               {
                 label: 'Issues',
-                href: 'https://github.com/yourusername/inteli-packs/issues',
+                href: 'https://github.com/Nom-nom-hub/inteli-packs/issues',
               },
               {
                 label: 'Discussions',
-                href: 'https://github.com/yourusername/inteli-packs/discussions',
+                href: 'https://github.com/Nom-nom-hub/inteli-packs/discussions',
               },
             ],
           },
@@ -128,7 +128,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/yourusername/inteli-packs',
+                href: 'https://github.com/Nom-nom-hub/inteli-packs',
               },
             ],
           },
