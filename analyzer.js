@@ -157,7 +157,7 @@ class ProjectAnalyzer {
         imports.add(packageName);
 
         if (!packageName.startsWith('.') && !packageName.startsWith('/')) {
-          const { split: mainPackage } = packageName('/')[0];
+          const mainPackage = packageName.split('/')[0];
           usedPackages.add(mainPackage);
         }
       }
@@ -221,10 +221,10 @@ class ProjectAnalyzer {
 
     console.log(chalk.blue('🔍 Analyzing project structure...'));
 
-    const { loadPackageJson: packageJson } = this();
+    const packageJson = this.loadPackageJson();
     const sourceFiles = await this.getSourceFiles();
     const sourceAnalysis = await this.analyzeSourceFiles(sourceFiles);
-    const { compareDependencies: dependencyComparison } = this(
+    const dependencyComparison = this.compareDependencies(
       packageJson,
       sourceAnalysis.usedPackages,
     );
@@ -253,17 +253,17 @@ class ProjectAnalyzer {
    * @returns {Array} - Array of workspace package paths
    */
   async getWorkspacePackages() {
-    const { loadPackageJson: packageJson } = this();
-    const { workspaces: workspaces } = packageJson || [];
+    const packageJson = this.loadPackageJson();
+    const workspaces = packageJson.workspaces || [];
     const workspacePackages = [];
 
     for (const workspace of workspaces) {
-      const { join: workspacePath } = path(this.projectRoot, workspace);
+      const workspacePath = path.join(this.projectRoot, workspace);
       if (await fs.pathExists(workspacePath)) {
         const packages = await fs.readdir(workspacePath);
         for (const pkg of packages) {
-          const { join: pkgPath } = path(workspacePath, pkg);
-          const { join: pkgJsonPath } = path(pkgPath, 'package.json');
+          const pkgPath = path.join(workspacePath, pkg);
+          const pkgJsonPath = path.join(pkgPath, 'package.json');
           if (await fs.pathExists(pkgJsonPath)) {
             workspacePackages.push(pkgPath);
           }
@@ -280,7 +280,7 @@ class ProjectAnalyzer {
    */
   async checkCommonIssues() {
     const issues = [];
-    const { loadPackageJson: packageJson } = this();
+    const packageJson = this.loadPackageJson();
 
     // Check for missing README
     if (!(await fs.pathExists(path.join(this.projectRoot, 'README.md')))) {
@@ -294,7 +294,7 @@ class ProjectAnalyzer {
 
     // Check for missing ESLint config
     const eslintConfigs = ['.eslintrc.js', '.eslintrc.json', '.eslintrc.yml', '.eslintrc.yaml'];
-    const { some: hasEslintConfig } = eslintConfigs(config =>
+    const hasEslintConfig = eslintConfigs.some(config =>
       fs.existsSync(path.join(this.projectRoot, config)),
     );
     if (!hasEslintConfig) {
@@ -303,7 +303,7 @@ class ProjectAnalyzer {
 
     // Check for missing Prettier config
     const prettierConfigs = ['.prettierrc', '.prettierrc.js', '.prettierrc.json'];
-    const { some: hasPrettierConfig } = prettierConfigs(config =>
+    const hasPrettierConfig = prettierConfigs.some(config =>
       fs.existsSync(path.join(this.projectRoot, config)),
     );
     if (!hasPrettierConfig) {
@@ -311,7 +311,7 @@ class ProjectAnalyzer {
     }
 
     // Check for outdated scripts
-    const { scripts: scripts } = packageJson || {};
+    const scripts = packageJson.scripts || {};
     if (!scripts.test && !scripts['test:unit'] && !scripts['test:integration']) {
       issues.push('Missing test scripts');
     }

@@ -140,16 +140,16 @@ class CommandsHandler {
 
       console.log(chalk.blue('📊 Project Analysis Results:'));
       console.log(chalk.gray('──────────────────────────────────────────────────'));
-      console.log(chalk.cyan(`📁 Total files: ${analysis.totalFiles}`));
-      console.log(chalk.cyan(`📝 Total lines: ${analysis.totalLines}`));
-      console.log(chalk.cyan(`📦 Total dependencies: ${analysis.totalDependencies}`));
-      console.log(chalk.green(`✅ Used dependencies: ${analysis.usedDependencies}`));
-      console.log(chalk.red(`❌ Unused dependencies: ${analysis.unusedDependencies}`));
-      console.log(chalk.yellow(`⚠️  Missing dependencies: ${analysis.missingDependencies}`));
+      console.log(chalk.cyan(`📁 Total files: ${analysis.summary?.totalFiles || analysis.sourceFiles || 'N/A'}`));
+      console.log(chalk.cyan(`📝 Total lines: ${analysis.summary?.totalLines || analysis.sourceAnalysis?.totalLines || 'N/A'}`));
+      console.log(chalk.cyan(`📦 Total dependencies: ${analysis.summary?.totalDependencies || analysis.dependencyComparison?.totalDependencies || 'N/A'}`));
+      console.log(chalk.green(`✅ Used dependencies: ${analysis.summary?.usedDependencies || analysis.dependencyComparison?.usedDependencies || 'N/A'}`));
+      console.log(chalk.red(`❌ Unused dependencies: ${analysis.summary?.unusedDependencies || analysis.dependencyComparison?.unusedDependencies?.length || 'N/A'}`));
+      console.log(chalk.yellow(`⚠️  Missing dependencies: ${analysis.summary?.missingDependencies || analysis.dependencyComparison?.missingDependencies?.length || 'N/A'}`));
 
-      if (analysis.unusedDependencies.length > 0) {
+      if (analysis.dependencyComparison?.unusedDependencies?.length > 0) {
         console.log(chalk.red('\n🗑️  Unused Dependencies:'));
-        analysis.unusedDependencies.forEach(dep => {
+        analysis.dependencyComparison.unusedDependencies.forEach(dep => {
           console.log(chalk.red(`  • ${dep}`));
         });
       }

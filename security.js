@@ -164,7 +164,7 @@ class SecurityAnalyzer {
     };
 
     for (const [packageName, version] of Object.entries(allDependencies)) {
-      const { calculateSuspiciousScore: suspiciousScore } = this(packageName);
+      const suspiciousScore = this.calculateSuspiciousScore(packageName);
       
       if (suspiciousScore > 0.7) {
         suspiciousPackages.push({
@@ -330,7 +330,7 @@ class SecurityAnalyzer {
         const items = await fs.readdir(dir);
         
         for (const item of items) {
-          const { join: fullPath } = path(dir, item);
+          const fullPath = path.join(dir, item);
           const stat = await fs.stat(fullPath);
           
           if (stat.isDirectory()) {
@@ -338,7 +338,7 @@ class SecurityAnalyzer {
               await scanDirectory(fullPath);
             }
           } else if (stat.isFile()) {
-            const { extname: ext } = path(item).toLowerCase();
+            const ext = path.extname(item).toLowerCase();
             if (sourceExtensions.includes(ext)) {
               files.push(fullPath);
             }
