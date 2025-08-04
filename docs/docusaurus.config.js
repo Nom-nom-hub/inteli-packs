@@ -73,13 +73,13 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
-          { to: '/docs/intro', label: 'Documentation', position: 'left' },
           {
             href: 'https://github.com/Nom-nom-hub/inteli-packs',
             label: 'GitHub',
             position: 'right',
           },
         ],
+        style: 'dark',
       },
       footer: {
         style: 'dark',

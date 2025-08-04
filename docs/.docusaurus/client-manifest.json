@@ -1,0 +1,261 @@
+{
+  "entrypoints": [
+    "main"
+  ],
+  "origins": {
+    "237": [
+      237
+    ],
+    "17896441": [
+      869,
+      401
+    ],
+    "82163028": [
+      983
+    ],
+    "main": [
+      354,
+      869,
+      792
+    ],
+    "runtime~main": [
+      792,
+      869,
+      354
+    ],
+    "0e384e19": [
+      976
+    ],
+    "3b8c55ea": [
+      803
+    ],
+    "3ef22398": [
+      477
+    ],
+    "40523afc": [
+      107
+    ],
+    "5e95c892": [
+      647
+    ],
+    "72e14192": [
+      814
+    ],
+    "935f2afb": [
+      581
+    ],
+    "a729eb01": [
+      980
+    ],
+    "a7bd4aaa": [
+      98
+    ],
+    "a94703ab": [
+      869,
+      48
+    ],
+    "c4f5d8e4": [
+      869,
+      634
+    ],
+    "c796d065": [
+      711
+    ],
+    "ca9f4135": [
+      843
+    ],
+    "fc842c58": [
+      540
+    ],
+    "styles": [
+      48,
+      354,
+      401,
+      634,
+      792,
+      869
+    ]
+  },
+  "assets": {
+    "48": {
+      "js": [
+        {
+          "file": "assets/js/a94703ab.85234477.js",
+          "hash": "75efdf5908bcf0aa",
+          "publicPath": "/inteli-packs/assets/js/a94703ab.85234477.js"
+        }
+      ]
+    },
+    "98": {
+      "js": [
+        {
+          "file": "assets/js/a7bd4aaa.74d4f070.js",
+          "hash": "b5bca92f1f0d258d",
+          "publicPath": "/inteli-packs/assets/js/a7bd4aaa.74d4f070.js"
+        }
+      ]
+    },
+    "107": {
+      "js": [
+        {
+          "file": "assets/js/40523afc.47dbe60a.js",
+          "hash": "f48b451f606c8be9",
+          "publicPath": "/inteli-packs/assets/js/40523afc.47dbe60a.js"
+        }
+      ]
+    },
+    "237": {
+      "js": [
+        {
+          "file": "assets/js/237.1d95c52a.js",
+          "hash": "4dfc2bd1fac2441b",
+          "publicPath": "/inteli-packs/assets/js/237.1d95c52a.js"
+        }
+      ]
+    },
+    "354": {
+      "js": [
+        {
+          "file": "assets/js/runtime~main.9d3ce9e8.js",
+          "hash": "3b7ffab3afe7ba1f",
+          "publicPath": "/inteli-packs/assets/js/runtime~main.9d3ce9e8.js"
+        }
+      ]
+    },
+    "401": {
+      "js": [
+        {
+          "file": "assets/js/17896441.89274d72.js",
+          "hash": "687e7789c3b05ec2",
+          "publicPath": "/inteli-packs/assets/js/17896441.89274d72.js"
+        }
+      ]
+    },
+    "477": {
+      "js": [
+        {
+          "file": "assets/js/3ef22398.eb15b835.js",
+          "hash": "0a079bdbfa781322",
+          "publicPath": "/inteli-packs/assets/js/3ef22398.eb15b835.js"
+        }
+      ]
+    },
+    "540": {
+      "js": [
+        {
+          "file": "assets/js/fc842c58.a6e515b3.js",
+          "hash": "7ad292d109ee53d2",
+          "publicPath": "/inteli-packs/assets/js/fc842c58.a6e515b3.js"
+        }
+      ]
+    },
+    "581": {
+      "js": [
+        {
+          "file": "assets/js/935f2afb.73976792.js",
+          "hash": "9bbde6a1c71676f5",
+          "publicPath": "/inteli-packs/assets/js/935f2afb.73976792.js"
+        }
+      ]
+    },
+    "634": {
+      "js": [
+        {
+          "file": "assets/js/c4f5d8e4.6a7d75a1.js",
+          "hash": "0d9256eca79e62da",
+          "publicPath": "/inteli-packs/assets/js/c4f5d8e4.6a7d75a1.js"
+        }
+      ]
+    },
+    "647": {
+      "js": [
+        {
+          "file": "assets/js/5e95c892.98a70925.js",
+          "hash": "f7aa49e3e76b8558",
+          "publicPath": "/inteli-packs/assets/js/5e95c892.98a70925.js"
+        }
+      ]
+    },
+    "711": {
+      "js": [
+        {
+          "file": "assets/js/c796d065.602db911.js",
+          "hash": "63765cc9fa2e5afa",
+          "publicPath": "/inteli-packs/assets/js/c796d065.602db911.js"
+        }
+      ]
+    },
+    "792": {
+      "js": [
+        {
+          "file": "assets/js/main.dba0412f.js",
+          "hash": "4487fd1453cbdae1",
+          "publicPath": "/inteli-packs/assets/js/main.dba0412f.js"
+        }
+      ]
+    },
+    "803": {
+      "js": [
+        {
+          "file": "assets/js/3b8c55ea.aeeed1a2.js",
+          "hash": "966b175766d2ab6f",
+          "publicPath": "/inteli-packs/assets/js/3b8c55ea.aeeed1a2.js"
+        }
+      ]
+    },
+    "814": {
+      "js": [
+        {
+          "file": "assets/js/72e14192.bf039a84.js",
+          "hash": "6c3bb0a4134844dd",
+          "publicPath": "/inteli-packs/assets/js/72e14192.bf039a84.js"
+        }
+      ]
+    },
+    "843": {
+      "js": [
+        {
+          "file": "assets/js/ca9f4135.d8863c76.js",
+          "hash": "72b3c06074de3ea7",
+          "publicPath": "/inteli-packs/assets/js/ca9f4135.d8863c76.js"
+        }
+      ]
+    },
+    "869": {
+      "css": [
+        {
+          "file": "assets/css/styles.37d62f40.css",
+          "hash": "70542a9ea99e7632",
+          "publicPath": "/inteli-packs/assets/css/styles.37d62f40.css"
+        }
+      ]
+    },
+    "976": {
+      "js": [
+        {
+          "file": "assets/js/0e384e19.1043141e.js",
+          "hash": "3ff6ec323a6d546b",
+          "publicPath": "/inteli-packs/assets/js/0e384e19.1043141e.js"
+        }
+      ]
+    },
+    "980": {
+      "js": [
+        {
+          "file": "assets/js/a729eb01.af06db2a.js",
+          "hash": "1cbf5da0a26d5d26",
+          "publicPath": "/inteli-packs/assets/js/a729eb01.af06db2a.js"
+        }
+      ]
+    },
+    "983": {
+      "js": [
+        {
+          "file": "assets/js/82163028.972285d6.js",
+          "hash": "0b904130f020b430",
+          "publicPath": "/inteli-packs/assets/js/82163028.972285d6.js"
+        }
+      ]
+    }
+  }
+}
