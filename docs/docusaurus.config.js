@@ -73,7 +73,7 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
-          { to: '/blog', label: 'Blog', position: 'left' },
+          { to: '/docs/intro', label: 'Documentation', position: 'left' },
           {
             href: 'https://github.com/Nom-nom-hub/inteli-packs',
             label: 'GitHub',
@@ -96,8 +96,8 @@ const config = {
                 to: '/docs/installation',
               },
               {
-                label: 'Usage',
-                to: '/docs/usage',
+                label: 'Quick Start',
+                to: '/docs/quick-start',
               },
             ],
           },
@@ -122,8 +122,8 @@ const config = {
             title: 'More',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
+                label: 'Documentation',
+                to: '/docs/intro',
               },
               {
                 label: 'GitHub',
