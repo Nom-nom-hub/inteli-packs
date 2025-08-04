@@ -1,7 +1,7 @@
 {
   "name": "inteli-packs",
   "version": "1.0.0",
-  "description": "Smart developer assistant for Node.js project optimization using Gemini AI",
+  "description": "Smart developer assistant for Node.js project optimization using 12+ AI providers with automatic fallback",
   "main": "index.js",
   "bin": {
     "inteli-packs": "./index.js"
@@ -29,6 +29,17 @@
     "analysis",
     "optimization",
     "gemini",
+    "openai",
+    "claude",
+    "openrouter",
+    "azure",
+    "cohere",
+    "huggingface",
+    "replicate",
+    "together",
+    "perplexity",
+    "ollama",
+    "llama",
     "ai",
     "cli",
     "developer-tools",
@@ -39,7 +50,10 @@
     "documentation",
     "project-management",
     "code-quality",
-    "dependency-management"
+    "dependency-management",
+    "multi-provider",
+    "fallback",
+    "enterprise"
   ],
   "author": "Your Name <your.email@example.com>",
   "license": "MIT",

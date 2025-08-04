@@ -3,11 +3,15 @@
 import fs from "fs";
 import path from "path";
 import { execSync  } from "child_process";
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 console.log('🔍 Validating Inteli-Packs CLI entrypoint...');
 
 // Check if index.js exists and is executable
-const { join: cliPath } = path(__dirname, '..', 'index.js');
+const cliPath = path.join(__dirname, '..', 'index.js');
 if (!fs.existsSync(cliPath)) {
   console.error('❌ index.js not found');
   process.exit(1);
@@ -55,7 +59,7 @@ try {
 }
 
 // Validate package.json bin field
-  const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
 if (!packageJson.bin || !packageJson.bin['inteli-packs']) {
   console.error('❌ package.json missing bin field for inteli-packs');
   process.exit(1);
@@ -73,6 +77,7 @@ const requiredFiles = [
   'index.js',
   'analyzer.js',
   'gemini.js',
+  'ai-providers.js',
   'commands.js',
   'utils.js',
   'security.js',
@@ -86,7 +91,7 @@ const requiredFiles = [
 ];
 
 for (const file of requiredFiles) {
-  const { join: filePath } = path(__dirname, '..', file);
+  const filePath = path.join(__dirname, '..', file);
   if (!fs.existsSync(filePath)) {
     console.error(`❌ Required file missing: ${file}`);
     process.exit(1);
