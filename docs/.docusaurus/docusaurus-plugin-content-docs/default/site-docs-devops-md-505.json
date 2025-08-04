@@ -1,0 +1,27 @@
+{
+  "id": "devops",
+  "title": "DevOps & Automation",
+  "description": "Inteli-Packs provides comprehensive DevOps automation capabilities, including GitHub Actions generation, Dockerfile creation, and automated workflow setup.",
+  "source": "@site/docs/devops.md",
+  "sourceDirName": ".",
+  "slug": "/devops",
+  "permalink": "/inteli-packs/docs/devops",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Nom-nom-hub/inteli-packs/tree/main/docs/docs/devops.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Testing Analysis",
+    "permalink": "/inteli-packs/docs/testing"
+  },
+  "next": {
+    "title": "Automation Tools",
+    "permalink": "/inteli-packs/docs/automation"
+  }
+}

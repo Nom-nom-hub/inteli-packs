@@ -1,36 +1,28 @@
 {
-  "/inteli-packs/docs-f74": {
+  "/inteli-packs/docs-bf4": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "40523afc"
     }
   },
-  "/inteli-packs/docs-82a": {
+  "/inteli-packs/docs-1bd": {
     "__comp": "a7bd4aaa",
     "version": "935f2afb"
   },
-  "/inteli-packs/docs-a2f": {
+  "/inteli-packs/docs-36c": {
     "__comp": "a94703ab"
   },
-  "/inteli-packs/docs/features/ai-analysis-9ac": {
+  "/inteli-packs/docs/ai-analysis-8f4": {
     "__comp": "17896441",
-    "content": "82163028"
+    "content": "94da297c"
   },
-  "/inteli-packs/docs/features/automation-139": {
+  "/inteli-packs/docs/automation-08c": {
     "__comp": "17896441",
-    "content": "3ef22398"
+    "content": "974bf0e4"
   },
-  "/inteli-packs/docs/features/devops-48d": {
+  "/inteli-packs/docs/devops-199": {
     "__comp": "17896441",
-    "content": "a729eb01"
-  },
-  "/inteli-packs/docs/features/security-e74": {
-    "__comp": "17896441",
-    "content": "fc842c58"
-  },
-  "/inteli-packs/docs/features/testing-84e": {
-    "__comp": "17896441",
-    "content": "c796d065"
+    "content": "5050eddd"
   },
   "/inteli-packs/docs/installation-ead": {
     "__comp": "17896441",
@@ -43,6 +35,14 @@
   "/inteli-packs/docs/quick-start-f1f": {
     "__comp": "17896441",
     "content": "72e14192"
+  },
+  "/inteli-packs/docs/security-f4f": {
+    "__comp": "17896441",
+    "content": "db32d859"
+  },
+  "/inteli-packs/docs/testing-d0a": {
+    "__comp": "17896441",
+    "content": "fbe93038"
   },
   "/inteli-packs/-fc4": {
     "__comp": "c4f5d8e4",

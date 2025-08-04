@@ -1,0 +1,27 @@
+{
+  "id": "ai-analysis",
+  "title": "AI-Powered Analysis",
+  "description": "Inteli-Packs provides comprehensive AI-powered analysis capabilities using multiple AI providers with automatic fallback.",
+  "source": "@site/docs/ai-analysis.md",
+  "sourceDirName": ".",
+  "slug": "/ai-analysis",
+  "permalink": "/inteli-packs/docs/ai-analysis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Nom-nom-hub/inteli-packs/tree/main/docs/docs/ai-analysis.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Quick Start",
+    "permalink": "/inteli-packs/docs/quick-start"
+  },
+  "next": {
+    "title": "Security Analysis",
+    "permalink": "/inteli-packs/docs/security"
+  }
+}
