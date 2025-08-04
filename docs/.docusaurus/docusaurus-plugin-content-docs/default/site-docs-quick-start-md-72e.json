@@ -1,0 +1,23 @@
+{
+  "id": "quick-start",
+  "title": "Quick Start",
+  "description": "Get up and running with Inteli-Packs in minutes.",
+  "source": "@site/docs/quick-start.md",
+  "sourceDirName": ".",
+  "slug": "/quick-start",
+  "permalink": "/inteli-packs/docs/quick-start",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Nom-nom-hub/inteli-packs/tree/main/docs/docs/quick-start.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Installation",
+    "permalink": "/inteli-packs/docs/installation"
+  }
+}

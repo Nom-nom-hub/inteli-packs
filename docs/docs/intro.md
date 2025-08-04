@@ -104,4 +104,4 @@ Inteli-Packs/
 
 Ready to get started? Check out the [Installation Guide](./installation.md) to set up Inteli-Packs in your project.
 
-For a quick overview of all features, see the [Features Overview](./features/ai-analysis.md). 
+For a quick overview of all features, see the [Installation Guide](./installation.md) and [Quick Start](./quick-start.md). 

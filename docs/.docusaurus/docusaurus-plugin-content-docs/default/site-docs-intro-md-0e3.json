@@ -1,0 +1,23 @@
+{
+  "id": "intro",
+  "title": "Introduction",
+  "description": "Inteli-Packs is a comprehensive AI-powered developer assistant that analyzes, optimizes, and manages Node.js project dependencies and configuration files using Google's Gemini AI.",
+  "source": "@site/docs/intro.md",
+  "sourceDirName": ".",
+  "slug": "/intro",
+  "permalink": "/inteli-packs/docs/intro",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Nom-nom-hub/inteli-packs/tree/main/docs/docs/intro.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "next": {
+    "title": "Installation",
+    "permalink": "/inteli-packs/docs/installation"
+  }
+}

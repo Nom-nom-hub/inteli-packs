@@ -155,6 +155,6 @@ Here's what you might see after running an analysis:
 
 ## Next Steps
 
-- Learn about [CLI Commands](./usage/cli-commands.md)
-- Explore [Interactive Mode](./usage/interactive-mode.md)
-- Check out [Advanced Features](./advanced/plugins.md)
+- Learn about CLI Commands in the main README
+- Explore Interactive Mode in the main README
+- Check out Advanced Features in the main README

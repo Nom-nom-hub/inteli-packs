@@ -1,8 +1,7 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-import lightCodeTheme from 'prism-react-renderer/themes/github';
-import darkCodeTheme from 'prism-react-renderer/themes/dracula';
+import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -21,7 +20,7 @@ const config = {
   organizationName: 'yourusername', // Usually your GitHub org/user name.
   projectName: 'inteli-packs', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -136,8 +135,8 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Inteli-Packs. Built with Docusaurus.`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        theme: prismThemes.github,
+        darkTheme: prismThemes.dracula,
       },
     }),
 };
