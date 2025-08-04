@@ -19,5 +19,9 @@
   "previous": {
     "title": "Installation",
     "permalink": "/inteli-packs/docs/installation"
+  },
+  "next": {
+    "title": "AI-Powered Analysis",
+    "permalink": "/inteli-packs/docs/features/ai-analysis"
   }
 }

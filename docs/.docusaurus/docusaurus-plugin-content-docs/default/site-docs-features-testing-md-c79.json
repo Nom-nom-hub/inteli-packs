@@ -1,0 +1,27 @@
+{
+  "id": "features/testing",
+  "title": "Testing Analysis",
+  "description": "Inteli-Packs provides comprehensive testing analysis for Node.js projects, including test coverage analysis, missing test detection, and testing framework recommendations.",
+  "source": "@site/docs/features/testing.md",
+  "sourceDirName": "features",
+  "slug": "/features/testing",
+  "permalink": "/inteli-packs/docs/features/testing",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Nom-nom-hub/inteli-packs/tree/main/docs/docs/features/testing.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Security Analysis",
+    "permalink": "/inteli-packs/docs/features/security"
+  },
+  "next": {
+    "title": "DevOps & Automation",
+    "permalink": "/inteli-packs/docs/features/devops"
+  }
+}

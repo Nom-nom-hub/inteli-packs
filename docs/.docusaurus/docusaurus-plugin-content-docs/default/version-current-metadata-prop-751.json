@@ -10,16 +10,16 @@
   "docsSidebars": {
     "tutorialSidebar": [
       {
-        "type": "link",
-        "label": "Introduction",
-        "href": "/inteli-packs/docs/intro",
-        "docId": "intro",
-        "unlisted": false
-      },
-      {
         "type": "category",
         "label": "Getting Started",
         "items": [
+          {
+            "type": "link",
+            "label": "Introduction",
+            "href": "/inteli-packs/docs/intro",
+            "docId": "intro",
+            "unlisted": false
+          },
           {
             "type": "link",
             "label": "Installation",
@@ -37,10 +37,83 @@
         ],
         "collapsed": true,
         "collapsible": true
+      },
+      {
+        "type": "category",
+        "label": "Features",
+        "items": [
+          {
+            "type": "link",
+            "label": "AI-Powered Analysis",
+            "href": "/inteli-packs/docs/features/ai-analysis",
+            "docId": "features/ai-analysis",
+            "unlisted": false
+          },
+          {
+            "type": "link",
+            "label": "Security Analysis",
+            "href": "/inteli-packs/docs/features/security",
+            "docId": "features/security",
+            "unlisted": false
+          },
+          {
+            "type": "link",
+            "label": "Testing Analysis",
+            "href": "/inteli-packs/docs/features/testing",
+            "docId": "features/testing",
+            "unlisted": false
+          },
+          {
+            "type": "link",
+            "label": "DevOps & Automation",
+            "href": "/inteli-packs/docs/features/devops",
+            "docId": "features/devops",
+            "unlisted": false
+          },
+          {
+            "type": "link",
+            "label": "Automation Tools",
+            "href": "/inteli-packs/docs/features/automation",
+            "docId": "features/automation",
+            "unlisted": false
+          }
+        ],
+        "collapsed": true,
+        "collapsible": true
       }
     ]
   },
   "docs": {
+    "features/ai-analysis": {
+      "id": "features/ai-analysis",
+      "title": "AI-Powered Analysis",
+      "description": "Inteli-Packs provides comprehensive AI-powered analysis capabilities using multiple AI providers with automatic fallback.",
+      "sidebar": "tutorialSidebar"
+    },
+    "features/automation": {
+      "id": "features/automation",
+      "title": "Automation Tools",
+      "description": "Inteli-Packs provides powerful automation tools for code refactoring, ESM migration, and automated project optimization.",
+      "sidebar": "tutorialSidebar"
+    },
+    "features/devops": {
+      "id": "features/devops",
+      "title": "DevOps & Automation",
+      "description": "Inteli-Packs provides comprehensive DevOps automation capabilities, including GitHub Actions generation, Dockerfile creation, and automated workflow setup.",
+      "sidebar": "tutorialSidebar"
+    },
+    "features/security": {
+      "id": "features/security",
+      "title": "Security Analysis",
+      "description": "Inteli-Packs provides comprehensive security analysis for Node.js projects, including vulnerability scanning, suspicious package detection, and code security analysis.",
+      "sidebar": "tutorialSidebar"
+    },
+    "features/testing": {
+      "id": "features/testing",
+      "title": "Testing Analysis",
+      "description": "Inteli-Packs provides comprehensive testing analysis for Node.js projects, including test coverage analysis, missing test detection, and testing framework recommendations.",
+      "sidebar": "tutorialSidebar"
+    },
     "installation": {
       "id": "installation",
       "title": "Installation",

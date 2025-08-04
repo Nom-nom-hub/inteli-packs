@@ -1,16 +1,36 @@
 {
-  "/inteli-packs/docs-c69": {
+  "/inteli-packs/docs-f74": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "40523afc"
     }
   },
-  "/inteli-packs/docs-ab7": {
+  "/inteli-packs/docs-82a": {
     "__comp": "a7bd4aaa",
     "version": "935f2afb"
   },
-  "/inteli-packs/docs-282": {
+  "/inteli-packs/docs-a2f": {
     "__comp": "a94703ab"
+  },
+  "/inteli-packs/docs/features/ai-analysis-9ac": {
+    "__comp": "17896441",
+    "content": "82163028"
+  },
+  "/inteli-packs/docs/features/automation-139": {
+    "__comp": "17896441",
+    "content": "3ef22398"
+  },
+  "/inteli-packs/docs/features/devops-48d": {
+    "__comp": "17896441",
+    "content": "a729eb01"
+  },
+  "/inteli-packs/docs/features/security-e74": {
+    "__comp": "17896441",
+    "content": "fc842c58"
+  },
+  "/inteli-packs/docs/features/testing-84e": {
+    "__comp": "17896441",
+    "content": "c796d065"
   },
   "/inteli-packs/docs/installation-ead": {
     "__comp": "17896441",

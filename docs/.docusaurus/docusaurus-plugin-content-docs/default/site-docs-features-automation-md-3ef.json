@@ -1,0 +1,23 @@
+{
+  "id": "features/automation",
+  "title": "Automation Tools",
+  "description": "Inteli-Packs provides powerful automation tools for code refactoring, ESM migration, and automated project optimization.",
+  "source": "@site/docs/features/automation.md",
+  "sourceDirName": "features",
+  "slug": "/features/automation",
+  "permalink": "/inteli-packs/docs/features/automation",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Nom-nom-hub/inteli-packs/tree/main/docs/docs/features/automation.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "sidebar_position": 5
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "DevOps & Automation",
+    "permalink": "/inteli-packs/docs/features/devops"
+  }
+}

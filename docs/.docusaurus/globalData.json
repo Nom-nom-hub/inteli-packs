@@ -11,6 +11,31 @@
           "mainDocId": "intro",
           "docs": [
             {
+              "id": "features/ai-analysis",
+              "path": "/inteli-packs/docs/features/ai-analysis",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "features/automation",
+              "path": "/inteli-packs/docs/features/automation",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "features/devops",
+              "path": "/inteli-packs/docs/features/devops",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "features/security",
+              "path": "/inteli-packs/docs/features/security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "features/testing",
+              "path": "/inteli-packs/docs/features/testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "installation",
               "path": "/inteli-packs/docs/installation",
               "sidebar": "tutorialSidebar"
@@ -31,7 +56,7 @@
             "tutorialSidebar": {
               "link": {
                 "path": "/inteli-packs/docs/intro",
-                "label": "Introduction"
+                "label": "intro"
               }
             }
           }

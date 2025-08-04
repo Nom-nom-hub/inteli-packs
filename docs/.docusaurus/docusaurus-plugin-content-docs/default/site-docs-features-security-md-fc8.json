@@ -1,0 +1,27 @@
+{
+  "id": "features/security",
+  "title": "Security Analysis",
+  "description": "Inteli-Packs provides comprehensive security analysis for Node.js projects, including vulnerability scanning, suspicious package detection, and code security analysis.",
+  "source": "@site/docs/features/security.md",
+  "sourceDirName": "features",
+  "slug": "/features/security",
+  "permalink": "/inteli-packs/docs/features/security",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Nom-nom-hub/inteli-packs/tree/main/docs/docs/features/security.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "AI-Powered Analysis",
+    "permalink": "/inteli-packs/docs/features/ai-analysis"
+  },
+  "next": {
+    "title": "Testing Analysis",
+    "permalink": "/inteli-packs/docs/features/testing"
+  }
+}

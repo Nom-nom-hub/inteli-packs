@@ -1,18 +1,23 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
-  // By default, Docusaurus generates a sidebar from the docs folder structure
   tutorialSidebar: [
-    {
-      type: 'doc',
-      id: 'intro',
-      label: 'Introduction',
-    },
     {
       type: 'category',
       label: 'Getting Started',
-      items: ['installation', 'quick-start'],
+      items: ['intro', 'installation', 'quick-start'],
+    },
+    {
+      type: 'category',
+      label: 'Features',
+      items: [
+        'features/ai-analysis',
+        'features/security',
+        'features/testing',
+        'features/devops',
+        'features/automation',
+      ],
     },
   ],
 };
 
-export default sidebars;
+module.exports = sidebars;
