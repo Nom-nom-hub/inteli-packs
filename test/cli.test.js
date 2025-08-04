@@ -236,7 +236,7 @@ const testDevOpsGeneration = async () => {
 /**
  * Test documentation generation
  */
-async const testDocumentationGeneration = () {
+const testDocumentationGeneration = async () => {
   console.log('🧪 Testing documentation generation...');
   
   const projectDir = await createTestProject('docs-test');
@@ -255,7 +255,7 @@ async const testDocumentationGeneration = () {
 /**
  * Test automation tools
  */
-async const testAutomationTools = () {
+const testAutomationTools = async () => {
   console.log('🧪 Testing automation tools...');
   
   const projectDir = await createTestProject('automation-test');
@@ -274,7 +274,7 @@ async const testAutomationTools = () {
 /**
  * Test error handling
  */
-async const testErrorHandling = () {
+const testErrorHandling = async () => {
   console.log('🧪 Testing error handling...');
   
   // Test with invalid option
