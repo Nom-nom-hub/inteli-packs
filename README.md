@@ -7,12 +7,12 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
 [![CI](https://github.com/Nom-nom-hub/inteli-packs/workflows/CI/badge.svg)](https://github.com/Nom-nom-hub/inteli-packs/actions)
 
-Inteli-Packs is a comprehensive AI-powered developer assistant that analyzes, optimizes, and manages Node.js project dependencies and configuration files using multiple AI providers with automatic fallback.
+Inteli-Packs is a comprehensive AI-powered developer assistant that analyzes, optimizes, and manages Node.js project dependencies and configuration files using **12+ AI providers** with automatic fallback.
 
 ## ✨ Features
 
 ### 🤖 **AI-Powered Analysis**
-- **Multi-Provider Support**: Gemini 1.5 Flash, GPT-4, Claude, Ollama, LLaMA
+- **12+ AI Providers**: Gemini, OpenAI, Claude, OpenRouter, Azure OpenAI, Cohere, Hugging Face, Replicate, Together AI, Perplexity, Ollama, LLaMA
 - **Automatic Fallback**: Seamless switching between AI providers
 - **Smart Dependency Analysis**: Detect unused, missing, and outdated packages
 - **Code Pattern Recognition**: Analyze imports and usage across all source files
@@ -53,26 +53,40 @@ Inteli-Packs is a comprehensive AI-powered developer assistant that analyzes, op
 
 ## 🤖 AI Provider Architecture
 
-Inteli-Packs uses a pluggable AI provider system that supports multiple models with automatic fallback:
+Inteli-Packs uses a pluggable AI provider system that supports **12+ models** with automatic fallback:
 
 ### **Supported Providers**
 
 | Provider | Type | API Key | Description |
 |----------|------|---------|-------------|
 | **Gemini** | Cloud | `GEMINI_API_KEY` | Google's Gemini 1.5 Flash (default) |
-| **GPT-4** | Cloud | `OPENAI_API_KEY` | OpenAI's GPT-4 model |
+| **OpenAI** | Cloud | `OPENAI_API_KEY` | OpenAI's GPT-4 and other models |
 | **Claude** | Cloud | `ANTHROPIC_API_KEY` | Anthropic's Claude 3 Sonnet |
-| **Ollama** | Local | None | Local Ollama server |
-| **LLaMA** | Local | None | Local LLaMA models |
+| **OpenRouter** | Cloud | `OPENROUTER_API_KEY` | Access to multiple models, cost-effective |
+| **Azure OpenAI** | Cloud | `AZURE_OPENAI_API_KEY` | Enterprise integration, compliance |
+| **Cohere** | Cloud | `COHERE_API_KEY` | Text generation, summarization |
+| **Hugging Face** | Cloud | `HUGGINGFACE_API_KEY` | Thousands of specialized models |
+| **Replicate** | Cloud | `REPLICATE_API_KEY` | Easy model deployment, async processing |
+| **Together AI** | Cloud | `TOGETHER_API_KEY` | Open source models, cost-effective |
+| **Perplexity** | Cloud | `PERPLEXITY_API_KEY` | Fast inference, real-time analysis |
+| **Ollama** | Local | None | Local privacy-focused models |
+| **LLaMA** | Local | None | Local customizable models |
 
 ### **Fallback Chain**
 
 The system automatically tries providers in this order:
 1. **Gemini** (default) - Fast, cost-effective
-2. **GPT-4** - High quality, reliable
+2. **OpenAI** - High quality, reliable
 3. **Claude** - Good reasoning capabilities
-4. **Ollama** - Local, privacy-focused
-5. **LLaMA** - Local, customizable
+4. **OpenRouter** - Model comparison, cost optimization
+5. **Azure OpenAI** - Enterprise environments, compliance
+6. **Cohere** - Text generation, summarization
+7. **Ollama** - Local, privacy-focused
+8. **Together AI** - Open source models, cost-effective
+9. **Perplexity** - Real-time analysis, quick responses
+10. **Hugging Face** - Specialized models, research
+11. **Replicate** - Custom models, batch processing
+12. **LLaMA** - Local, customizable
 
 ### **Auto-Detection**
 
@@ -93,329 +107,131 @@ npm install -g inteli-packs
 npx inteli-packs
 
 # Homebrew (macOS)
-brew install yourusername/inteli-packs/inteli-packs
+brew install Nom-nom-hub/inteli-packs/inteli-packs
 ```
 
 ### Setup
 
-#### AI Model Configuration
-
-Inteli-Packs supports multiple AI providers with automatic fallback:
-
-**Default: Gemini 1.5 Flash**
 ```bash
-# Set Gemini API key
-echo "GEMINI_API_KEY=your_gemini_api_key" > .env
+# Set up your preferred AI provider
+export GEMINI_API_KEY="your_gemini_api_key"
+export OPENAI_API_KEY="your_openai_api_key"
+export ANTHROPIC_API_KEY="your_anthropic_api_key"
+export OPENROUTER_API_KEY="your_openrouter_api_key"
+
+# Or use any other provider
+export AZURE_OPENAI_API_KEY="your_azure_key"
+export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com"
+export AZURE_OPENAI_DEPLOYMENT_NAME="your-deployment"
 ```
 
-**Alternative Providers:**
+### Usage
+
 ```bash
-# OpenAI GPT-4
-echo "OPENAI_API_KEY=your_openai_api_key" >> .env
+# Interactive mode
+inteli-packs
 
-# Anthropic Claude
-echo "ANTHROPIC_API_KEY=your_anthropic_api_key" >> .env
+# Auto mode with all features
+inteli-packs --auto
 
-# Local Ollama (requires Ollama installation)
-echo "OLLAMA_BASE_URL=http://localhost:11434" >> .env
-echo "OLLAMA_MODEL=llama2" >> .env
+# Use specific AI provider
+inteli-packs --model openrouter --auto
+inteli-packs --model azure --auto
+inteli-packs --model cohere --auto
 
-# Local LLaMA (requires llama.cpp)
-echo "LLAMA_MODEL_PATH=/path/to/your/model.gguf" >> .env
-```
+# Bootstrap new project
+inteli-packs init my-new-project
 
-**Model Selection:**
-```bash
-# Use specific model
-inteli-packs --model gemini
-inteli-packs --model gpt4
-inteli-packs --model claude
-inteli-packs --model ollama
-
-# List available models
+# List available AI models
 inteli-packs --list-models
 
-# Test all models
+# Test all AI models
 inteli-packs --test-models
 ```
 
-3. **Run Your First Analysis**
-   ```bash
-   # Interactive mode
-   inteli-packs
+## 📖 Documentation
 
-   # Auto mode (non-interactive)
-   inteli-packs --auto
+📚 **[Full Documentation](https://nom-nom-hub.github.io/inteli-packs/)** - Complete guides, API reference, and examples
 
-   # Specific analysis
-   inteli-packs --security
-   inteli-packs --testing
-   inteli-packs --devops
-   ```
+### Key Documentation Sections:
+- **[Installation Guide](https://nom-nom-hub.github.io/inteli-packs/docs/installation)** - Setup instructions for all platforms
+- **[Quick Start](https://nom-nom-hub.github.io/inteli-packs/docs/quick-start)** - Get up and running in minutes
+- **[AI Analysis](https://nom-nom-hub.github.io/inteli-packs/docs/features/ai-analysis)** - Complete guide to AI providers
+- **[Security Analysis](https://nom-nom-hub.github.io/inteli-packs/docs/features/security)** - Security scanning and recommendations
+- **[Testing Analysis](https://nom-nom-hub.github.io/inteli-packs/docs/features/testing)** - Test coverage and framework analysis
+- **[DevOps & Automation](https://nom-nom-hub.github.io/inteli-packs/docs/features/devops)** - CI/CD and automation tools
+- **[Automation Tools](https://nom-nom-hub.github.io/inteli-packs/docs/features/automation)** - Code refactoring and optimization
 
-### Bootstrap a New Project
+## 🎯 Use Cases
 
-```bash
-# Create a new Node.js project with best practices
-inteli-packs init my-awesome-project
+### **For Developers**
+- **Dependency Management**: Clean up unused packages, find alternatives
+- **Security Audits**: Scan for vulnerabilities and suspicious packages
+- **Code Quality**: Analyze patterns and get improvement suggestions
+- **Project Setup**: Bootstrap new projects with best practices
 
-# Navigate to the project
-cd my-awesome-project
+### **For Teams**
+- **CI/CD Integration**: Automated analysis in GitHub Actions
+- **Code Reviews**: AI-powered code analysis and suggestions
+- **Documentation**: Auto-generate comprehensive documentation
+- **Standards**: Enforce consistent project structure and tooling
 
-# Start development
-npm start
-```
-
-## 📖 Usage
-
-### Interactive Mode
-
-```bash
-inteli-packs
-```
-
-Choose from the interactive menu:
-- 📦 **Analyze dependencies** - AI-powered dependency analysis
-- 🧹 **Clean up unused packages** - Remove unused dependencies
-- 📄 **Generate README boilerplate** - AI-generated documentation
-- 🛠 **Auto-fix common project issues** - Fix missing configs
-- 🔒 **Security analysis** - Vulnerability and security scanning
-- 🧪 **Testing analysis** - Test coverage and framework detection
-- 🚀 **DevOps generation** - GitHub Actions and Docker files
-- ⚡ **Automation tools** - Code refactoring and migration
-- 🔌 **Plugin management** - Extensibility and customization
-- 📚 **Documentation generation** - Complete docs folder
-
-### Command Line Options
-
-```bash
-# Basic usage
-inteli-packs
-
-# Auto mode (non-interactive)
-inteli-packs --auto
-
-# Specific analyses
-inteli-packs --security
-inteli-packs --testing
-inteli-packs --devops
-inteli-packs --documentation
-inteli-packs --automation
-
-# Advanced options
-inteli-packs --profile detailed
-inteli-packs --plugins security,performance
-inteli-packs --verbose
-
-# Help
-inteli-packs --help
-```
-
-### Programmatic Usage
-
-```javascript
-const { ProjectAnalyzer, GeminiAPI } = require('inteli-packs');
-
-// Analyze dependencies
-const analyzer = new ProjectAnalyzer();
-const results = await analyzer.analyzeDependencies();
-
-// Generate README
-const gemini = new GeminiAPI();
-const readme = await gemini.generateReadme(packageJson);
-```
+### **For Enterprises**
+- **Compliance**: Azure OpenAI for enterprise environments
+- **Privacy**: Local models with Ollama and LLaMA
+- **Cost Optimization**: OpenRouter and Together AI for cost-effective analysis
+- **Custom Models**: Hugging Face and Replicate for specialized needs
 
 ## 🔧 Configuration
 
 ### Environment Variables
 
-Create a `.env` file in your project root:
+```bash
+# Core providers
+GEMINI_API_KEY=your_gemini_api_key
+OPENAI_API_KEY=your_openai_api_key
+ANTHROPIC_API_KEY=your_anthropic_api_key
 
-```env
-GEMINI_API_KEY=your_api_key_here
-NODE_ENV=development  # Optional: for verbose logging
+# New providers
+OPENROUTER_API_KEY=your_openrouter_api_key
+AZURE_OPENAI_API_KEY=your_azure_openai_api_key
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
+AZURE_OPENAI_DEPLOYMENT_NAME=your-deployment-name
+COHERE_API_KEY=your_cohere_api_key
+HUGGINGFACE_API_KEY=your_huggingface_api_key
+REPLICATE_API_KEY=your_replicate_api_key
+TOGETHER_API_KEY=your_together_api_key
+PERPLEXITY_API_KEY=your_perplexity_api_key
+
+# Local providers
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama2
+LLAMA_MODEL_PATH=/path/to/your/model.gguf
 ```
 
-### Plugin Configuration
-
-Create custom plugins in `.inteli-packs/plugins/`:
-
-```javascript
-// .inteli-packs/plugins/my-plugin.js
-module.exports = {
-  id: 'my-plugin',
-  name: 'My Custom Plugin',
-  description: 'Custom analysis plugin',
-  hooks: ['pre-analysis', 'post-analysis'],
-  execute: async (hook, context) => {
-    // Your plugin logic here
-    return { data: { custom: 'data' } };
-  }
-};
-```
-
-### Prompt Profiles
-
-Create custom prompt profiles in `.inteli-packs/profiles/`:
-
-```json
-// .inteli-packs/profiles/custom.json
-{
-  "id": "custom",
-  "name": "Custom Profile",
-  "description": "Custom analysis profile",
-  "prompts": {
-    "dependencyAnalysis": "Custom dependency analysis prompt",
-    "readmeGeneration": "Custom README generation prompt"
-  }
-}
-```
-
-## 📊 Example Output
-
-### Dependency Analysis
-
-```
-📊 Project Analysis Results:
-──────────────────────────────────────────────────
-📁 Total files: 15
-📝 Total lines: 1,247
-📦 Total dependencies: 12
-✅ Used dependencies: 8
-❌ Unused dependencies: 4
-⚠️  Missing dependencies: 0
-
-🗑️  Unused Dependencies:
-  • axios
-  • moment
-  • lodash
-  • nodemon
-
-💡 AI Recommendations:
-  • Consider using dayjs instead of moment for smaller bundle size
-  • Replace lodash with native JavaScript methods where possible
-  • Remove axios if not using HTTP requests
-```
-
-### Security Analysis
-
-```
-🔒 Security Analysis Results:
-──────────────────────────────────────────────────
-✅ No vulnerabilities detected
-⚠️  Suspicious packages: 1
-  • test-package@1.0.0 (score: 0.8)
-
-🔍 Security issues in code: 2
-  • src/config.js:15 - Hardcoded secret detected
-  • src/utils.js:42 - Potentially dangerous code pattern: eval(
-
-💡 Security Recommendations:
-  • Use environment variables for secrets
-  • Review suspicious packages
-  • Implement proper input validation
-```
-
-## 🧪 Testing
-
-Run the comprehensive test suite:
+### CLI Options
 
 ```bash
-# Run all tests
-npm test
+# AI Model Selection
+--model gemini|openai|claude|openrouter|azure|cohere|huggingface|replicate|together|perplexity|ollama|llama
 
-# Run with coverage
-npm run test:coverage
+# Analysis Types
+--security          # Security analysis only
+--testing           # Testing analysis only
+--devops            # DevOps generation only
+--documentation     # Documentation generation only
+--automation        # Automation tools only
 
-# Run specific test scenarios
-node test/cli.test.js
-
-# Validate CLI entrypoint
-npm run validate
+# Utility
+--list-models       # List available AI models
+--test-models       # Test all AI models
+--verbose           # Enable verbose logging
+--auto              # Run in non-interactive mode
 ```
-
-## 🔌 Plugin Development
-
-### Creating a Plugin
-
-1. Create a plugin file in `.inteli-packs/plugins/`
-2. Export a plugin object with required properties
-3. Implement the `execute` function
-
-```javascript
-module.exports = {
-  id: 'my-plugin',
-  name: 'My Plugin',
-  description: 'Custom analysis plugin',
-  hooks: ['pre-analysis', 'post-analysis'],
-  execute: async (hook, context) => {
-    switch (hook) {
-      case 'pre-analysis':
-        // Pre-analysis logic
-        return { data: { preCheck: true } };
-      case 'post-analysis':
-        // Post-analysis logic
-        return { data: { postCheck: true } };
-    }
-  }
-};
-```
-
-### Available Hooks
-
-- `pre-analysis`: Before dependency analysis
-- `post-analysis`: After dependency analysis
-- `pre-generation`: Before documentation generation
-- `post-generation`: After documentation generation
-
-## 📚 Documentation
-
-### Local Development
-
-```bash
-# Set up documentation site
-npm run setup-docs
-
-# Start documentation development server
-npm run docs:dev
-
-# Build documentation
-npm run docs:build
-
-# Serve built documentation
-npm run docs:serve
-```
-
-### Documentation Features
-
-- **Interactive Guides**: Step-by-step tutorials
-- **API Reference**: Complete API documentation
-- **Examples**: Real-world usage examples
-- **Blog**: Updates and announcements
-- **Search**: Full-text search capabilities
 
 ## 🤝 Contributing
 
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Make your changes**
-4. **Run tests**
-   ```bash
-   npm test
-   npm run validate
-   ```
-5. **Commit your changes**
-   ```bash
-   git commit -m "feat: add amazing feature"
-   ```
-6. **Push to your fork**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-7. **Create a Pull Request**
+We welcome contributions! Please see our [Contributing Guide](https://nom-nom-hub.github.io/inteli-packs/docs/contributing) for details.
 
 ### Development Setup
 
@@ -427,47 +243,32 @@ cd inteli-packs
 # Install dependencies
 npm install
 
-# Set up environment
-cp .env.example .env
-# Add your Gemini API key to .env
+# Run tests
+npm test
 
-# Run in development mode
-npm run dev
+# Run linting
+npm run lint
 
-# Set up documentation
-npm run setup-docs
+# Build documentation
+npm run docs:build
 ```
 
-## 📝 License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- [Google Gemini AI](https://ai.google.dev/) for providing the AI capabilities
-- [Commander.js](https://github.com/tj/commander.js) for CLI framework
-- [Inquirer.js](https://github.com/SBoudal/Inquirer.js) for interactive prompts
-- [Chalk](https://github.com/chalk/chalk) for terminal styling
-- [Docusaurus](https://docusaurus.io/) for documentation site
+- **AI Providers**: Google, OpenAI, Anthropic, OpenRouter, Microsoft, Cohere, Hugging Face, Replicate, Together AI, Perplexity
+- **Open Source**: Ollama, LLaMA, and the open source AI community
+- **Contributors**: All contributors who help improve Inteli-Packs
 
 ## 📞 Support
 
-- 📧 **Email**: your.email@example.com
-- 🐛 **Issues**: [GitHub Issues](https://github.com/Nom-nom-hub/inteli-packs/issues)
-- 📖 **Documentation**: [GitHub Wiki](https://github.com/Nom-nom-hub/inteli-packs/wiki)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/Nom-nom-hub/inteli-packs/discussions)
-
-## 🚀 Roadmap
-
-- [ ] **Gemini Pro Vision Support**: Analyze code with images
-- [ ] **TypeScript Support**: Native TypeScript analysis
-- [ ] **Monorepo Enhancement**: Advanced workspace analysis
-- [ ] **Performance Profiling**: Runtime performance analysis
-- [ ] **Database Integration**: Support for database schemas
-- [ ] **Cloud Deployment**: Auto-deploy to cloud platforms
-- [ ] **Team Collaboration**: Multi-user project analysis
-- [ ] **Custom Rules Engine**: User-defined analysis rules
+- **Documentation**: [https://nom-nom-hub.github.io/inteli-packs/](https://nom-nom-hub.github.io/inteli-packs/)
+- **Issues**: [GitHub Issues](https://github.com/Nom-nom-hub/inteli-packs/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Nom-nom-hub/inteli-packs/discussions)
 
 ---
 
-**Made with ❤️ by the Inteli-Packs Team** 
+**Made with ❤️ by the Inteli-Packs team** 
