@@ -9,8 +9,14 @@ import path from "path";
 import assert from "assert";
 
 // Test configuration
-const { join: TEST_DIR } = path(__dirname, 'test-projects');
-const { join: CLI_PATH } = path(__dirname, '..', 'index.js');
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const TEST_DIR = path.join(__dirname, 'test-projects');
+const CLI_PATH = path.join(__dirname, '..', 'index.js');
 
 /**
  * Create test project
@@ -371,7 +377,7 @@ const testPluginSystem = async () => {
 /**
  * Test prompt memory
  */
-async const testPromptMemory = () {
+const testPromptMemory = async () => {
   console.log('🧪 Testing prompt memory...');
   
   const projectDir = await createTestProject('memory-test');
@@ -390,7 +396,7 @@ async const testPromptMemory = () {
 /**
  * Test auto-refactor safety
  */
-async const testAutoRefactorSafety = () {
+const testAutoRefactorSafety = async () => {
   console.log('🧪 Testing auto-refactor safety...');
   
   const projectDir = await createTestProject('refactor-test');
@@ -409,7 +415,7 @@ async const testAutoRefactorSafety = () {
 /**
  * Run all tests
  */
-async const runAllTests = () {
+const runAllTests = async () => {
   console.log('🚀 Starting comprehensive CLI test suite...\n');
   
   try {
@@ -436,11 +442,11 @@ async const runAllTests = () {
 }
 
 // Run tests if this file is executed directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runAllTests();
 }
 
-module.exports = {
+export {
   runAllTests,
   testBasicCLI,
   testDependencyAnalysis,
