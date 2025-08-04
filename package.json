@@ -1,0 +1,120 @@
+{
+  "name": "inteli-packs",
+  "version": "1.0.0",
+  "description": "Smart developer assistant for Node.js project optimization using Gemini AI",
+  "main": "index.js",
+  "bin": {
+    "inteli-packs": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test/cli.test.js",
+    "test:coverage": "node test/cli.test.js --coverage",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "dev": "node index.js --verbose",
+    "pack": "npm pack",
+    "prepublishOnly": "npm run validate && npm test && npm run lint",
+    "validate": "node scripts/validate-cli.js",
+    "init": "node scripts/init.js",
+    "setup-docs": "node scripts/setup-docs.js",
+    "docs:dev": "cd docs && npm start",
+    "docs:build": "cd docs && npm run build",
+    "docs:serve": "cd docs && npm run serve"
+  },
+  "keywords": [
+    "nodejs",
+    "dependencies",
+    "analysis",
+    "optimization",
+    "gemini",
+    "ai",
+    "cli",
+    "developer-tools",
+    "security",
+    "testing",
+    "devops",
+    "automation",
+    "documentation",
+    "project-management",
+    "code-quality",
+    "dependency-management"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
+    "fs-extra": "^11.1.1",
+    "inquirer": "^8.2.6"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/inteli-packs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/inteli-packs/issues"
+  },
+  "homepage": "https://github.com/yourusername/inteli-packs#readme",
+  "files": [
+    "index.js",
+    "analyzer.js",
+    "gemini.js",
+    "ai-providers.js",
+    "commands.js",
+    "utils.js",
+    "security.js",
+    "testing.js",
+    "devops.js",
+    "automation.js",
+    "plugins.js",
+    "documentation.js",
+    "scripts/validate-cli.js",
+    "README.md",
+    "LICENSE",
+    ".eslintrc.js",
+    ".prettierrc",
+    ".editorconfig"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./analyzer": "./analyzer.js",
+    "./gemini": "./gemini.js",
+    "./ai-providers": "./ai-providers.js",
+    "./commands": "./commands.js",
+    "./utils": "./utils.js",
+    "./security": "./security.js",
+    "./testing": "./testing.js",
+    "./devops": "./devops.js",
+    "./automation": "./automation.js",
+    "./plugins": "./plugins.js",
+    "./documentation": "./documentation.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/yourusername/inteli-packs"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ]
+} 

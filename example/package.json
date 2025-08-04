@@ -1,0 +1,21 @@
+{
+  "name": "example-project",
+  "version": "1.0.0",
+  "description": "Example project for testing inteli-packs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4"
+  },
+  "keywords": [
+    "example",
+    "test"
+  ],
+  "author": "Example Author",
+  "license": "MIT"
+}
