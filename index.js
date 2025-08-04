@@ -17,7 +17,7 @@ loadEnvironment();
 program
   .name('inteli-packs')
   .description('Smart developer assistant for Node.js project optimization using AI')
-  .version('1.0.5')
+  .version('1.0.6')
   .option('-a, --auto', 'Run in non-interactive mode with full optimization')
   .option('-v, --verbose', 'Enable verbose logging')
   .option('--model <model>', 'AI model to use (gemini, openai, claude, openrouter, azure, cohere, ollama, together, perplexity, huggingface, replicate, llama)', 'gemini')
