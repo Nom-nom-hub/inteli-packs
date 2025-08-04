@@ -32,7 +32,7 @@ program
   .option('--test-models', 'Test all available AI models')
   .parse();
 
-const { opts: options } = program();
+const options = program.opts();
 
 /**
  * Main application entry point
@@ -110,8 +110,8 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // Run the application
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-module.exports = { main }; 
+export { main }; 
